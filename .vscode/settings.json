@@ -1,6 +1,6 @@
 {
   "commentTranslate.targetLanguage": "ja",
-  "python.pythonPath": "c:\\Users\\takam\\Documents\\GitHub\\oss\\TkSugar\\.venv\\Scripts\\python.exe",
+  "python.pythonPath": ".venv\\Scripts\\python.exe",
   "python.testing.unittestArgs": [
     "-v",
     "-s",
