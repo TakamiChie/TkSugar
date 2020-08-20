@@ -144,6 +144,34 @@ class Generator(object):
     except AttributeError as e:
       raise TypeError(e)
 
+  def _scantree(self, struct):
+    """
+    Scan an array and convert it to a tree of class names, parameters and child objects
+
+    Parameters
+    ----
+    struct: dict
+      Data array
+    """
+    def _scantree_core(struct):
+      props = {
+        "classname": "",
+        "params": [],
+        "children": [],
+      }
+      rootname = next(iter(struct))
+      props["classname"] = rootname[1:]
+      for n, v in struct[rootname].items():
+        if n[0] == "_":
+          props["children"].append(_scantree_core({n: v}))
+        else:
+          if v is None:
+            props["params"].append([n])
+          else:
+            props["params"].append([n, v])
+      return props
+    return _scantree_core(struct)
+
 if __name__ == "__main__":
   gen = Generator()
   gen.string = """
