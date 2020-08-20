@@ -152,6 +152,11 @@ class Generator(object):
     ----
     struct: dict
       Data array
+
+    Retrns
+    ----
+    treedata: dict
+      Tree data
     """
     def _scantree_core(struct):
       props = {
