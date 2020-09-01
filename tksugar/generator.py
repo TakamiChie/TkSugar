@@ -23,7 +23,7 @@ class Generator(object):
       An array indicating the name of the module to be used.
       By default, it is "tkinter" only.
 
-      Because modules can be added with the `addmodules()`,
+      Because modules can be added with the `Generator#add_modules()`,
       the value is specified here only if you do not want to load the tkinter module.
     """
     self.string = ""
