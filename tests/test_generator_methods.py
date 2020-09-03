@@ -214,6 +214,10 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["children"][0]["params"][0], ["grid"])
       self.assertEqual(tree["children"][0]["children"][0]["classname"], "Button")
 
+  #endregion
+
+  #region test of _get_argnames()
+
   def test_get_argnames(self):
     """
     When you call `Generator#get_argnames()` under the following conditions,
@@ -233,6 +237,10 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertIn("activebackground", list)
     self.assertIn("text", list)
     self.assertIn("cnf", list)
+
+  #endregion
+
+  #region test of _split_params()
 
   def test_split_params(self):
     """
