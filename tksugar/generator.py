@@ -183,6 +183,16 @@ class Generator(object):
     Get method argument list.
     If the document comment includes "STANDARD OPTIONS" and "WIDGET-SPECIFIC" OPTIONS,
     use that as the argument list.
+
+    Parameters
+    ----
+    method: func
+      Function object.
+
+    Returns
+    ----
+    arglist: list(str)
+      Argument list.
     """
     result = []
     # add inspect result
