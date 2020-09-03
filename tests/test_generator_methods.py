@@ -234,6 +234,72 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertIn("text", list)
     self.assertIn("cnf", list)
 
+  def test_split_params(self):
+    """
+    When you call `Generator#_split_params()` under the following conditions,
+    Confirm that the parameter list is returned correctly.
+    * Target method parameters in the parameter list and other values ​​mixed.
+    * All items in the parameter list have values.
+    """
+    params, others = Generator._split_params(tkinter.Label.__init__, {
+      "text": "test",
+      "bitmap": "abc",
+      "test": "abc",
+      "unknown": 123,
+    })
+    self.assertIn("text", params)
+    self.assertIn("bitmap", params)
+    self.assertIn("test", others)
+    self.assertIn("unknown", others)
+
+  def test_split_params_only_params(self):
+    """
+    When you call `Generator#_split_params()` under the following conditions,
+    Confirm that the parameter list is returned correctly.
+    * Only the parameter of the target method exists in the parameter list.
+    * All items in the parameter list have values.
+    """
+    params, others = Generator._split_params(tkinter.Label.__init__, {
+      "text": "test",
+      "bitmap": "abc",
+    })
+    self.assertIn("text", params)
+    self.assertIn("bitmap", params)
+    self.assertEqual(len(others), 0)
+
+  def test_split_params_only_others(self):
+    """
+    When you call `Generator#_split_params()` under the following conditions,
+    Confirm that the parameter list is returned correctly.
+    * Only the parameter of the target method exists in the parameter list.
+    * All items in the parameter list have values.
+    """
+    params, others = Generator._split_params(tkinter.Label.__init__, {
+      "test": "abc",
+      "unknown": 123,
+    })
+    self.assertEqual(len(params), 0)
+    self.assertIn("test", others)
+    self.assertIn("unknown", others)
+
+  def test_split_params_none_value(self):
+    """
+    When you call `Generator#_split_params()` under the following conditions,
+    Confirm that the parameter list is returned correctly.
+    * Target method parameters in the parameter list and other values ​​mixed.
+    * Some of the items included in the parameter are None.
+    """
+    params, others = Generator._split_params(tkinter.Label.__init__, {
+      "text": "test",
+      "bitmap": None,
+      "test": None,
+      "unknown": 123,
+    })
+    self.assertIn("text", params)
+    self.assertIn("bitmap", params)
+    self.assertIn("test", others)
+    self.assertIn("unknown", others)
+
   #endregion
 
 if __name__ == "__main__":

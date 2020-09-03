@@ -217,6 +217,31 @@ class Generator(object):
       i += 1
     return result
 
+  @staticmethod
+  def _split_params(method, params):
+    """
+    Separate the parameter list into optional method arguments and anything else.
+
+    Parameters
+    ----
+    method: func
+      Method to be distributed.
+    params: dict[str, any]
+      Parameter list.
+
+    Returns
+    ----
+    methodparams: dict[str, any]
+      method arguments.
+    other: dict[str, any]
+      Any other value.
+    """
+    methodparams = {}
+    for p in Generator._get_argnames(method):
+      if p in params:
+        methodparams[p] = params[p]
+        del params[p]
+    return methodparams, params
 if __name__ == "__main__":
   gen = Generator()
   gen.string = """
