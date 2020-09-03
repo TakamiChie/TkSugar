@@ -225,7 +225,7 @@ class Test_Generator_Methods(unittest.TestCase):
 
   def test_get_argnames_tkinterobj(self):
     """
-    When you call `Generator#get_argnames()` under the following conditions,
+    When you call `Generator#_get_argnames()` under the following conditions,
     make sure to add the contents of doc comment to the return value.
     * Target is tkinter module class __init__.
     """
