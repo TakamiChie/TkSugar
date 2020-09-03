@@ -242,6 +242,33 @@ class Generator(object):
         methodparams[p] = params[p]
         del params[p]
     return methodparams, params
+
+  def _instantiate(self, cls, **params):
+    """
+    Generate an object with set properties based on class and property list.
+
+    Parameters
+    ----
+    cls: class
+      The object to instantiate.
+
+    params: dict(str, any)
+      Property list.
+
+    Returns
+    ----
+    instance: object
+      The instantiated class.
+    """
+    initparams, others = Generator._split_params(cls.__init__, params)
+    obj = cls(initparams)
+    for n, v in others.items():
+      attr = getattr(obj, n)
+      if v is None:
+        attr()
+      else:
+        attr(v)
+
 if __name__ == "__main__":
   gen = Generator()
   gen.string = """
