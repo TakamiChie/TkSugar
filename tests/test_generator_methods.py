@@ -1,5 +1,6 @@
 import unittest
 import types
+import tkinter
 
 import yaml
 
@@ -212,6 +213,26 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["children"][0]["classname"], "Frame")
       self.assertEqual(tree["children"][0]["params"][0], ["grid"])
       self.assertEqual(tree["children"][0]["children"][0]["classname"], "Button")
+
+  def test_get_argnames(self):
+    """
+    When you call `Generator#get_argnames()` under the following conditions,
+    Make sure to generate an argument list.
+    * Common Python methods
+    """
+    list = Generator._get_argnames("".split)
+    self.assertIn("maxsplit", list)
+
+  def test_get_argnames_tkinterobj(self):
+    """
+    When you call `Generator#get_argnames()` under the following conditions,
+    make sure to add the contents of doc comment to the return value.
+    * Target is tkinter module class __init__.
+    """
+    list = Generator._get_argnames(tkinter.Label.__init__)
+    self.assertIn("activebackground", list)
+    self.assertIn("text", list)
+    self.assertIn("cnf", list)
 
   #endregion
 

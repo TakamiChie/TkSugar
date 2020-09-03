@@ -177,6 +177,36 @@ class Generator(object):
       return props
     return _scantree_core(struct)
 
+  @staticmethod
+  def _get_argnames(method):
+    """
+    Get method argument list.
+    If the document comment includes "STANDARD OPTIONS" and "WIDGET-SPECIFIC" OPTIONS,
+    use that as the argument list.
+    """
+    result = []
+    # add inspect result
+    for p in filter(lambda p: p.kind == p.POSITIONAL_OR_KEYWORD, inspect.signature(method).parameters.values()):
+      result.append(p.name)
+
+    # add comment args
+    lines = method.__doc__.split("\n")
+    i = 0
+    collect = False
+    while i < len(lines):
+      if collect:
+        if lines[i] == "":
+          collect = False
+        else:
+          for p in lines[i].strip().split(",")[:-1]:
+            result.append(p.strip())
+      else:
+        if "STANDARD OPTIONS" in lines[i] or "WIDGET-SPECIFIC OPTIONS" in lines[i]:
+          collect = True
+          i += 1
+      i += 1
+    return result
+
 if __name__ == "__main__":
   gen = Generator()
   gen.string = """
