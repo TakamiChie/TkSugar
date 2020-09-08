@@ -262,13 +262,14 @@ class Generator(object):
       The instantiated class.
     """
     initparams, others = Generator._split_params(cls.__init__, params)
-    obj = cls(initparams)
+    obj = cls(**initparams)
     for n, v in others.items():
-      attr = getattr(obj, n)
-      if v is None:
-        attr()
+      if inspect.isroutine(getattr(obj, n)):
+        attr = getattr(obj, n)
+        attr() if v is None else attr(v)
       else:
-        attr(v)
+        setattr(obj, n, v)
+    return obj
 
 if __name__ == "__main__":
   gen = Generator()

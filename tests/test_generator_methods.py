@@ -1,3 +1,4 @@
+from msilib.schema import Class
 import unittest
 import types
 import tkinter
@@ -15,17 +16,14 @@ class ClassForTest(object):
     self.e = e
     self.f = f
     self.g = None
-    self.h = None
-    self.i = False
+    self.h = False
+    self.i = None
 
-  def g(self, value):
-    self.g = value
+  def seth(self):
+    self.h = True
 
-  def h(self, value):
-    self.h = value
-
-  def i(self):
-    self.i = True
+  def seti(self, value):
+    self.i = value
 
   @staticmethod
   def j():
@@ -358,6 +356,100 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertIn("bitmap", params)
     self.assertIn("test", others)
     self.assertIn("unknown", others)
+
+  #endregion
+
+  #region test of _instantiate()
+
+  def test_instantiate(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Make sure the class is instantiated.
+    * Specify all required parameters.
+    """
+    obj = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c")
+    self.assertEqual(obj.a, "a")
+    self.assertEqual(obj.b, "b")
+    self.assertEqual(obj.c, "c")
+    self.assertEqual(obj.d, 1)
+    self.assertEqual(obj.e, 2)
+    self.assertEqual(obj.f, 3)
+    self.assertEqual(obj.g, None)
+    self.assertEqual(obj.h, False)
+    self.assertEqual(obj.i, None)
+
+  def test_instantiate_non_mandatory_params(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Make sure the class is instantiated.
+    * Specify all required parameters.
+    * Specify all non-mandatory parameters.
+    """
+    obj = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", d = "d", e = "e", f = "f")
+    self.assertEqual(obj.a, "a")
+    self.assertEqual(obj.b, "b")
+    self.assertEqual(obj.c, "c")
+    self.assertEqual(obj.d, "d")
+    self.assertEqual(obj.e, "e")
+    self.assertEqual(obj.f, "f")
+    self.assertEqual(obj.g, None)
+    self.assertEqual(obj.h, False)
+    self.assertEqual(obj.i, None)
+
+  def test_instantiate_set_other_props(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Make sure the class is instantiated.
+    * Specify all required parameters.
+    * Hold parameters that are not in constructor arguments.
+    """
+    obj = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", g = "g", seth = None, seti = "abc")
+    self.assertEqual(obj.a, "a")
+    self.assertEqual(obj.b, "b")
+    self.assertEqual(obj.c, "c")
+    self.assertEqual(obj.d, 1)
+    self.assertEqual(obj.e, 2)
+    self.assertEqual(obj.f, 3)
+    self.assertEqual(obj.g, "g")
+    self.assertEqual(obj.h, True)
+    self.assertEqual(obj.i, "abc")
+
+  def test_instantiate_indefinite_order(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Make sure the class is instantiated.
+    * Specify all required parameters.
+    * The order of the required parameters is the reverse of the definition.
+    """
+    obj = Generator._instantiate(ClassForTest, c = "c", b = "b", a = "a")
+    self.assertEqual(obj.a, "a")
+    self.assertEqual(obj.b, "b")
+    self.assertEqual(obj.c, "c")
+    self.assertEqual(obj.d, 1)
+    self.assertEqual(obj.e, 2)
+    self.assertEqual(obj.f, 3)
+    self.assertEqual(obj.g, None)
+    self.assertEqual(obj.h, False)
+    self.assertEqual(obj.i, None)
+
+  def test_instantiate_no_require_params(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Confirm that TypeError occurs.
+    * Mandatory parameter not specified.
+    """
+    with self.assertRaises(TypeError):
+      Generator._instantiate(ClassForTest)
+
+  def test_instantiate_unknown_param(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Confirm that AttributeError occurs.
+    * Specify all required parameters.
+    * Unknown parameter is specified.
+    """
+    with self.assertRaises(AttributeError):
+      Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", z = 0)
 
   #endregion
 
