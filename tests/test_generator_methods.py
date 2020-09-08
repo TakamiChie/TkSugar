@@ -6,6 +6,37 @@ import yaml
 
 from tksugar.generator import Generator
 
+class ClassForTest(object):
+  def __init__(self, a, b, c, d=1, e=2, f=3):
+    self.a = a
+    self.b = b
+    self.c = c
+    self.d = d
+    self.e = e
+    self.f = f
+    self.g = None
+    self.h = None
+    self.i = False
+
+  def g(self, value):
+    self.g = value
+
+  def h(self, value):
+    self.h = value
+
+  def i(self):
+    self.i = True
+
+  @staticmethod
+  def j():
+    """
+    This method has documentation comments.
+    STANDARD OPTIONS
+
+    g, i,
+    """
+    pass
+
 class Test_Generator_Methods(unittest.TestCase):
   """
   Method tests other than the `generate()` method of the Generator class.
