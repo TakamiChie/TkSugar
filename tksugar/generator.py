@@ -200,7 +200,7 @@ class Generator(object):
       result.append(p.name)
 
     # add comment args
-    lines = method.__doc__.split("\n")
+    lines = method.__doc__.split("\n") if method.__doc__ else []
     i = 0
     collect = False
     while i < len(lines):

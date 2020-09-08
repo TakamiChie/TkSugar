@@ -238,6 +238,26 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertIn("text", list)
     self.assertIn("cnf", list)
 
+  def test_get_argnames_hasnt_docstring(self):
+    """
+    When you call `Generator#get_argnames()` under the following conditions,
+    Make sure to generate an argument list.
+    * Document comment is not set in the method passed as an argument
+    """
+    list = Generator._get_argnames(ClassForTest.__init__)
+    self.assertIn("a", list)
+    self.assertIn("b", list)
+    self.assertIn("c", list)
+
+  def test_get_argnames_has_docstring(self):
+    """
+    When you call `Generator#get_argnames()` under the following conditions,
+    Make sure to generate an argument list.
+    * Document comment is set in the method passed as an argument
+    """
+    list = Generator._get_argnames(ClassForTest.j)
+    self.assertListEqual(list, ["g", "i"])
+
   #endregion
 
   #region test of _split_params()
