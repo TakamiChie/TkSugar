@@ -212,21 +212,6 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["params"][0], ["title", "TEST Window"])
       self.assertEqual(len(tree["children"]), 0)
 
-  def test_scantree_simpledata(self):
-    """
-    When calling the `Generator#_scantree()` method under the following conditions,
-    make sure that the method structures the tree.
-    * Specify one Tk window in the file.
-    """
-    gen = Generator(modules=["tkinter"])
-    with open("tests/definition/plane.yml", "r") as f:
-      struct = yaml.safe_load(f)
-      tree = gen._scantree(struct)
-      self.assertEqual(tree["classname"], "Tk")
-      self.assertEqual(len(tree["params"]), 1)
-      self.assertEqual(tree["params"][0], ["title", "TEST Window"])
-      self.assertEqual(len(tree["children"]), 0)
-
   def test_scantree_button(self):
     """
     When calling the `Generator#_scantree()` method under the following conditions,
