@@ -52,25 +52,20 @@ class Generator(object):
     window: tkinter.Tk
       Tk window object.
     """
-    def _generate_core(struct, owner, modules):
-      for n, v in struct.items():
-        if n[0] == "_":
-          cls = self._load_class(modules, n)
-          obj = cls(owner)
-          _generate_core(v, obj, modules)
-        else:
-          attr = getattr(owner, n)
-          if v is None:
-            attr()
-          else:
-            attr(v)
+    def _generate_core(children, owner, modules):
+      for i in children:
+        cls = self._load_class(modules, i["classname"])
+        obj = self._instantiate(cls, master=owner, **i["params"])
+        if i["children"]:
+          _generate_core(i["children"], obj, modules)
     struct = yaml.safe_load(self.string)
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
     modules = self._load_modules()
-    rname = next(iter(struct))
-    root = self._load_class(modules, rname)()
-    _generate_core(struct[rname], root, modules)
+    tree = self._scantree(struct)
+    cls  = self._load_class(modules, tree["classname"])
+    root = Generator._instantiate(cls, **tree["params"])
+    _generate_core(tree["children"], root, modules)
     return root
 
   ### Private Methods

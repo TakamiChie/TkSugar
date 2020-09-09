@@ -28,8 +28,8 @@ class Test_Generator_Methods(unittest.TestCase):
     """
     gen = Generator("tests/definition/button.yml")
     tk = gen.generate()
-    self.assertEquals(type(tk), tkinter.Tk)
-    self.assertEquals(tk.title(), "TEST Window")
+    self.assertEquals(type(tk.children["!frame"]), tkinter.Frame)
+    self.assertEquals(type(tk.children["!frame"].children["!button"]), tkinter.Button)
 
 if __name__ == "__main__":
   unittest.main()

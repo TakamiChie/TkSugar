@@ -4,4 +4,4 @@ _Tk:
     grid:
     _Button:
       text: "OK"
-      anchor: "S"
+      anchor: "s"
