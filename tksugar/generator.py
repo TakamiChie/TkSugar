@@ -161,7 +161,7 @@ class Generator(object):
     def _scantree_core(struct):
       props = {
         "classname": "",
-        "params": [],
+        "params": {},
         "children": [],
       }
       rootname = next(iter(struct))
@@ -171,9 +171,9 @@ class Generator(object):
           props["children"].append(_scantree_core({n: v}))
         else:
           if v is None:
-            props["params"].append([n])
+            props["params"][n] = None
           else:
-            props["params"].append([n, v])
+            props["params"][n] = v
       return props
     return _scantree_core(struct)
 

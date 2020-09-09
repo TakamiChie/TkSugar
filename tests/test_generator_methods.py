@@ -209,7 +209,7 @@ class Test_Generator_Methods(unittest.TestCase):
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
       self.assertEqual(len(tree["params"]), 1)
-      self.assertEqual(tree["params"][0], ["title", "TEST Window"])
+      self.assertEqual(tree["params"]["title"], "TEST Window")
       self.assertEqual(len(tree["children"]), 0)
 
   def test_scantree_button(self):
@@ -225,8 +225,10 @@ class Test_Generator_Methods(unittest.TestCase):
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
       self.assertEqual(tree["children"][0]["classname"], "Frame")
-      self.assertEqual(tree["children"][0]["params"][0], ["grid"])
+      self.assertEqual(tree["children"][0]["params"]["grid"], None)
       self.assertEqual(tree["children"][0]["children"][0]["classname"], "Button")
+      self.assertEqual(tree["children"][0]["children"][0]["params"]["anchor"], "S")
+      self.assertEqual(tree["children"][0]["children"][0]["params"]["text"], "OK")
 
   #endregion
 
