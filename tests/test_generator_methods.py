@@ -227,7 +227,7 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["children"][0]["classname"], "Frame")
       self.assertEqual(tree["children"][0]["params"]["grid"], None)
       self.assertEqual(tree["children"][0]["children"][0]["classname"], "Button")
-      self.assertEqual(tree["children"][0]["children"][0]["params"]["anchor"], "S")
+      self.assertEqual(tree["children"][0]["children"][0]["params"]["anchor"], "s")
       self.assertEqual(tree["children"][0]["children"][0]["params"]["text"], "OK")
 
   #endregion
