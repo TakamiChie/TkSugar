@@ -269,7 +269,14 @@ class Generator(object):
 if __name__ == "__main__":
   gen = Generator()
   gen.string = """
-  - Tk
+  _Tk:
+    title: "TEST Window"
+    geometry: 400x300
+    _Frame:
+      pack:
+      _Label:
+        text: "Hello"
+        pack:
   """
   window = gen.generate()
   window.mainloop()
