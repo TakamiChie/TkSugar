@@ -164,6 +164,9 @@ class Generator(object):
       for n, v in struct[rootname].items():
         if n[0] == "_":
           props["children"].append(_scantree_core({n: v}))
+        elif n == "::children":
+          for item in v:
+            props["children"].append(_scantree_core(item))
         else:
           if v is None:
             props["params"][n] = None

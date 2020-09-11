@@ -230,6 +230,23 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["children"][0]["children"][0]["params"]["anchor"], "s")
       self.assertEqual(tree["children"][0]["children"][0]["params"]["text"], "OK")
 
+  def test_scantree_children(self):
+    """
+    When calling the `Generator#_scantree()` method under the following conditions,
+    make sure that the method structures the tree.
+    * Specify one Tk window in the file.
+    * There is a widget in the window.
+    * `::children` element exists.
+    """
+    gen = Generator(modules=["tkinter"])
+    with open("tests/definition/children.yml", "r") as f:
+      struct = yaml.safe_load(f)
+      tree = gen._scantree(struct)
+      self.assertEqual(tree["classname"], "Tk")
+      self.assertEqual(len(tree["children"][0]["children"]), 2)
+      self.assertEqual(tree["children"][0]["children"][0]["classname"], "Label")
+      self.assertEqual(tree["children"][0]["children"][1]["classname"], "Label")
+
   #endregion
 
   #region test of _get_argnames()
