@@ -1,0 +1,14 @@
+_Tk:
+  title: "TEST Window"
+  _Frame:
+    pack:
+    ::children:
+      - ::params:
+          text: "Test"
+          pack:
+      - _Label:
+          text: "Hello"
+      - _Label:
+      - _Label:
+  _Button:
+    width: 5

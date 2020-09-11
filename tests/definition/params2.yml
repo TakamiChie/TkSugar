@@ -1,0 +1,8 @@
+_Tk:
+  title: "TEST Window"
+  ::params:
+    pack:
+  _Frame:
+    ::children:
+      - _Label:
+      - _Label:

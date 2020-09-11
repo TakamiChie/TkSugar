@@ -153,7 +153,7 @@ class Generator(object):
     treedata: dict
       Tree data
     """
-    def _scantree_core(struct):
+    def _scantree_core(struct, params):
       props = {
         "classname": "",
         "params": {},
@@ -161,19 +161,37 @@ class Generator(object):
       }
       rootname = next(iter(struct))
       props["classname"] = rootname[1:]
-      for n, v in struct[rootname].items():
+      items = {}
+      # merge params.
+      if "params" in params:
+        if struct[rootname] is None:
+          items = params["params"]
+        else:
+          items = dict(params["params"], **struct[rootname])
+      else:
+        items = struct[rootname]
+      # rootname check.
+      if rootname == "::params":
+        params["params"] = items
+        return None
+      # parse.
+      for n, v in items.items():
         if n[0] == "_":
-          props["children"].append(_scantree_core({n: v}))
+          props["children"].append(_scantree_core({n: v}, params))
         elif n == "::children":
+          inparam = dict(params)
           for item in v:
-            props["children"].append(_scantree_core(item))
+            r = _scantree_core(item, inparam)
+            if r is not None: props["children"].append(r)
+        elif n == "::params":
+          params["params"] = v
         else:
           if v is None:
             props["params"][n] = None
           else:
             props["params"][n] = v
       return props
-    return _scantree_core(struct)
+    return _scantree_core(struct, {})
 
   @staticmethod
   def _get_argnames(method):
