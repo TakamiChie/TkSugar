@@ -1,0 +1,74 @@
+_Tk:
+  title: calculator
+  ::children:
+    - ::params:
+        width: 5
+        height: 2
+    #
+    - _Label:
+        foreground: #ffffff
+        background: #000000
+        anchor: e
+        grid: {row: 0, column: 0, columnspan: 4, sticky: ew}
+    - _Button:
+        text: "C"
+        grid: {row: 1, column: 0}
+    - _Button:
+        text: "AC"
+        grid: {row: 1, column: 1}
+    - _Button:
+        text: "%"
+        grid: {row: 1, column: 2}
+    - _Button:
+        text: "+"
+        grid: {row: 1, column: 3}
+    #
+    - _Button:
+        text: 7
+        grid: {row: 2, column: 0}
+    - _Button:
+        text: 8
+        grid: {row: 2, column: 1}
+    - _Button:
+        text: 9
+        grid: {row: 2, column: 2}
+    - _Button:
+        text: "/"
+        grid: {row: 2, column: 3}
+    #
+    - _Button:
+        text: 4
+        grid: {row: 3, column: 0}
+    - _Button:
+        text: 5
+        grid: {row: 3, column: 1}
+    - _Button:
+        text: 6
+        grid: {row: 3, column: 2}
+    - _Button:
+        text: "*"
+        grid: {row: 3, column: 3}
+    #
+    - _Button:
+        text: 1
+        grid: {row: 4, column: 0}
+    - _Button:
+        text: 2
+        grid: {row: 4, column: 1}
+    - _Button:
+        text: 3
+        grid: {row: 4, column: 2}
+    - _Button:
+        text: "-"
+        grid: {row: 4, column: 3}
+    #
+    - _Button:
+        text: 0
+        grid: {row: 5, column: 0}
+    - _Button:
+        text: "."
+        grid: {row: 5, column: 2}
+    - _Button:
+        text: "="
+        grid: {row: 5, column: 3}
+
