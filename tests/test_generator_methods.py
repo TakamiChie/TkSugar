@@ -32,6 +32,7 @@ class ClassForTest(object):
     STANDARD OPTIONS
 
     g, i,
+    j, k, l
     """
     pass
 
@@ -247,6 +248,41 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["children"][0]["children"][0]["classname"], "Label")
       self.assertEqual(tree["children"][0]["children"][1]["classname"], "Label")
 
+  def test_scantree_params_inside_child(self):
+    """
+    When calling the `Generator#_scantree()` method under the following conditions,
+    That the method is structuring the tree,
+    And, make sure that the value of `::params` affects only the elements under the `::children` element.
+    * Specify one Tk window in the file.
+    * There is a widget in the window.
+    * The `::params` element exists inside the `::children` element.
+    """
+    gen = Generator(modules=["tkinter"])
+    with open("tests/definition/params1.yml", "r") as f:
+      struct = yaml.safe_load(f)
+      tree = gen._scantree(struct)
+      self.assertEqual(tree["classname"], "Tk")
+      self.assertEqual(tree["children"][0]["children"][0]["params"]["text"], "Hello")
+      self.assertEqual(tree["children"][0]["children"][1]["params"]["text"], "Test")
+      self.assertEqual(tree["children"][0]["children"][2]["params"]["text"], "Test")
+      self.assertNotIn("text", tree["children"][1]["params"])
+
+  def test_scantree_params_outside_child(self):
+    """
+    When calling the `Generator#_scantree()` method under the following conditions,
+    make sure that the method structures the tree.
+    * Specify one Tk window in the file.
+    * There is a widget in the window.
+    * The `::params` element exists outside the `::children` element.
+    """
+    gen = Generator(modules=["tkinter"])
+    with open("tests/definition/params2.yml", "r") as f:
+      struct = yaml.safe_load(f)
+      tree = gen._scantree(struct)
+      self.assertEqual(tree["classname"], "Tk")
+      self.assertIn("pack", tree["children"][0]["children"][0]["params"])
+      self.assertIn("pack", tree["children"][0]["children"][1]["params"])
+
   #endregion
 
   #region test of _get_argnames()
@@ -289,7 +325,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Document comment is set in the method passed as an argument
     """
     list = Generator._get_argnames(ClassForTest.j)
-    self.assertListEqual(list, ["g", "i"])
+    self.assertListEqual(list, ["g", "i", "j", "k", "l"])
 
   #endregion
 
