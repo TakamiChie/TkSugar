@@ -224,8 +224,8 @@ class Generator(object):
         if lines[i] == "":
           collect = False
         else:
-          for p in lines[i].strip().split(",")[:-1]:
-            result.append(p.strip())
+          for p in lines[i].strip().split(","):
+            if p != "": result.append(p.strip())
       else:
         if "STANDARD OPTIONS" in lines[i] or "WIDGET-SPECIFIC OPTIONS" in lines[i]:
           collect = True
