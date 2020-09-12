@@ -283,6 +283,24 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertIn("pack", tree["children"][0]["children"][0]["params"])
       self.assertIn("pack", tree["children"][0]["children"][1]["params"])
 
+  def test_scantree_idtags(self):
+    """
+    When calling the `Generator#_scantree()` method under the following conditions,
+    That the method is structuring the tree,
+    And make sure to store the ID and tag in the tree without changing the values ​​of the ID and tag fields.
+    * Specify one Tk window in the file.
+    * There is a widget in the window.
+    * ID and tag elements are defined in windows and widgets.
+    """
+    gen = Generator(modules=["tkinter"])
+    with open("tests/definition/idtags.yml", "r") as f:
+      struct = yaml.safe_load(f)
+      tree = gen._scantree(struct)
+      self.assertEqual(tree["params"]["::id"], "test")
+      self.assertEqual(tree["children"][0]["params"]["::tag"], "test")
+      self.assertEqual(tree["children"][0]["children"][0]["params"]["::id"], "testbutton")
+      self.assertEqual(tree["children"][0]["children"][0]["params"]["::tag"], "thisisatest")
+
   #endregion
 
   #region test of _get_argnames()
@@ -407,7 +425,7 @@ class Test_Generator_Methods(unittest.TestCase):
     Make sure the class is instantiated.
     * Specify all required parameters.
     """
-    obj = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c")
+    obj, unused = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -425,7 +443,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * Specify all non-mandatory parameters.
     """
-    obj = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", d = "d", e = "e", f = "f")
+    obj, unused = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", d = "d", e = "e", f = "f")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -443,7 +461,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * Hold parameters that are not in constructor arguments.
     """
-    obj = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", g = "g", seth = None, seti = "abc")
+    obj, unused = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", g = "g", seth = None, seti = "abc")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -461,7 +479,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * The order of the required parameters is the reverse of the definition.
     """
-    obj = Generator._instantiate(ClassForTest, c = "c", b = "b", a = "a")
+    obj, unused = Generator._instantiate(ClassForTest, c = "c", b = "b", a = "a")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -490,6 +508,22 @@ class Test_Generator_Methods(unittest.TestCase):
     """
     with self.assertRaises(AttributeError):
       Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", z = 0)
+
+  def test_instantiate_set_idtags(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Make sure the class is instantiated.
+    * Specify all required parameters.
+    * ID and tag elements are defined.
+    """
+    unused, tag = Generator._instantiate(ClassForTest, **{
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "::id": "testid",
+      "::tag": "testtag"})
+    self.assertEqual(tag.id, "testid")
+    self.assertEqual(tag.tag, "testtag")
 
   #endregion
 

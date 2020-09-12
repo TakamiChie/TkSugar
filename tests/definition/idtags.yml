@@ -1,0 +1,9 @@
+_Tk:
+  title: "TEST Window"
+  ::id: test
+  _Frame:
+    ::tag: test
+    _Button:
+      text: test
+      ::id: testbutton
+      ::tag: thisisatest

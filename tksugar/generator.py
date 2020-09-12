@@ -4,6 +4,35 @@ from typing import Type
 
 import yaml
 
+class TagData(object):
+  """
+  An object that represents additional data for the widget.
+  In TkManager, it is used to link the TkManager ID and the widget.
+  """
+  def __init__(self, widget):
+    """
+    Constructor
+
+    Parameters
+    ----
+    widget: object
+      Tk widget.
+    """
+    self.widget = widget
+    self.id = None
+    self.tag= None
+
+  def hasdata(self):
+    """
+    True if there is data.
+
+    Returns
+    ----
+    hasdata: bool
+      True if there is data
+    """
+    return self.id or self.tag
+
 class Generator(object):
   """
   The core object that creates the Tk window.
@@ -31,6 +60,7 @@ class Generator(object):
       with open(file, "r") as f:
         self.string = f.read()
     self._modules = modules
+    self._widgets = []
 
   def add_modules(self, *modules):
     """
@@ -55,7 +85,8 @@ class Generator(object):
     def _generate_core(children, owner, modules):
       for i in children:
         cls = self._load_class(modules, i["classname"])
-        obj = self._instantiate(cls, master=owner, **i["params"])
+        obj, tag = self._instantiate(cls, master=owner, **i["params"])
+        if tag.hasdata(): self._widgets.append(tag)
         if i["children"]:
           _generate_core(i["children"], obj, modules)
     struct = yaml.safe_load(self.string)
@@ -64,9 +95,29 @@ class Generator(object):
     modules = self._load_modules()
     tree = self._scantree(struct)
     cls  = self._load_class(modules, tree["classname"])
-    root = Generator._instantiate(cls, **tree["params"])
+    root, tag = Generator._instantiate(cls, **tree["params"])
+    if tag.hasdata(): self._widgets.append(tag)
     _generate_core(tree["children"], root, modules)
     return root
+
+  def findbyid(self, id):
+    """
+    Search for widgets by ID.
+    If multiple items with the same ID are defined, the first item is returned.
+
+    Parameters
+    ----
+    id: str
+      ID
+
+    Returns
+    ----
+    widget: TagData|None
+      If an item is found, TagData containing that widget.
+      None if the item is not found.
+    """
+    l = list(filter(lambda x: x.id == id, self._widgets))
+    return None if l == [] else l[0]
 
   ### Private Methods
 
@@ -276,16 +327,24 @@ class Generator(object):
     ----
     instance: object
       The instantiated class.
+    tagdata: TagData
+      Widget additional data.
     """
     initparams, others = Generator._split_params(cls.__init__, params)
     obj = cls(**initparams)
+    tagdata = TagData(obj)
     for n, v in others.items():
-      if inspect.isroutine(getattr(obj, n)):
+      if n.startswith("::"):
+        if "id" in n:
+          tagdata.id = v
+        elif "tag" in n:
+          tagdata.tag = v
+      elif inspect.isroutine(getattr(obj, n)):
         attr = getattr(obj, n)
         attr() if v is None else attr(v)
       else:
         setattr(obj, n, v)
-    return obj
+    return obj, tagdata
 
 if __name__ == "__main__":
   gen = Generator()
