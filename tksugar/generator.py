@@ -4,6 +4,8 @@ from typing import Type
 
 import yaml
 
+from tksugar.tkmanager import TkManager
+
 class TagData(object):
   """
   An object that represents additional data for the widget.
@@ -118,6 +120,18 @@ class Generator(object):
     """
     l = list(filter(lambda x: x.id == id, self._widgets))
     return None if l == [] else l[0]
+
+  def get_manager(self):
+    """
+    Create a window, store it in the `TkManager` that manages the window, and return it.
+
+    Returns
+    ----
+    manager: TkManager
+      A TkManager object that contains a window object.
+    """
+    window = self.generate()
+    return TkManager(window, self._widgets)
 
   ### Private Methods
 
