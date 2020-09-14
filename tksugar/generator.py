@@ -347,7 +347,8 @@ class Generator(object):
     ----
     cls: class
       The object to instantiate.
-
+    callback: func
+      An event handler for processing commands for widgets with the ::command element set.
     params: dict(str, any)
       Property list.
 
@@ -355,8 +356,6 @@ class Generator(object):
     ----
     instance: object
       The instantiated class.
-    callback: func
-      An event handler for processing commands for widgets with the ::command element set.
     tagdata: TagData
       Widget additional data.
     """
