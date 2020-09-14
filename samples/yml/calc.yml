@@ -4,6 +4,7 @@ _Tk:
     - ::params:
         width: 5
         height: 2
+        ::command:
     #
     - _Label:
         foreground: #ffffff

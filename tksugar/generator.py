@@ -1,5 +1,6 @@
 import importlib
 import inspect
+import tkinter
 from typing import Type
 
 import yaml
@@ -34,6 +35,15 @@ class TagData(object):
       True if there is data
     """
     return self.id or self.tag
+
+class EventReciever(object):
+  def __init__(self, object, tag, callback):
+    self.object = object
+    self.tag = tag
+    self.callback = callback
+
+  def __call__(self, event=None):
+    self.callback(self.object, self.tag)
 
 class Generator(object):
   """
@@ -75,7 +85,7 @@ class Generator(object):
     """
     self._modules.append(*modules)
 
-  def generate(self):
+  def generate(self, command):
     """
     Generate a Tk window based on the specified files and modules.
 
@@ -83,11 +93,13 @@ class Generator(object):
     ----
     window: tkinter.Tk
       Tk window object.
+    command: func
+      An event handler for processing commands for widgets with the ::command element set.
     """
     def _generate_core(children, owner, modules):
       for i in children:
         cls = self._load_class(modules, i["classname"])
-        obj, tag = self._instantiate(cls, master=owner, **i["params"])
+        obj, tag = self._instantiate(cls, callback=command, master=owner, **i["params"])
         if tag.hasdata(): self._widgets.append(tag)
         if i["children"]:
           _generate_core(i["children"], obj, modules)
@@ -121,7 +133,7 @@ class Generator(object):
     l = list(filter(lambda x: x.id == id, self._widgets))
     return None if l == [] else l[0]
 
-  def get_manager(self):
+  def get_manager(self, commandhandler):
     """
     Create a window, store it in the `TkManager` that manages the window, and return it.
 
@@ -129,8 +141,10 @@ class Generator(object):
     ----
     manager: TkManager
       A TkManager object that contains a window object.
+    commandhandler: func
+      An event handler for processing commands for widgets with the ::command element set.
     """
-    window = self.generate()
+    window = self.generate(command=commandhandler)
     return TkManager(window, self._widgets)
 
   ### Private Methods
@@ -325,7 +339,7 @@ class Generator(object):
     return methodparams, params
 
   @staticmethod
-  def _instantiate(cls, **params):
+  def _instantiate(cls, callback=None, **params):
     """
     Generate an object with set properties based on class and property list.
 
@@ -341,6 +355,8 @@ class Generator(object):
     ----
     instance: object
       The instantiated class.
+    callback: func
+      An event handler for processing commands for widgets with the ::command element set.
     tagdata: TagData
       Widget additional data.
     """
@@ -353,6 +369,11 @@ class Generator(object):
           tagdata.id = v
         elif "tag" in n:
           tagdata.tag = v
+        elif "command" in n and not callback is None:
+          try:
+            obj["command"] = EventReciever(obj, tagdata, callback)
+          except tkinter.TclError:
+            pass
       elif inspect.isroutine(getattr(obj, n)):
         attr = getattr(obj, n)
         attr() if v is None else attr(v)

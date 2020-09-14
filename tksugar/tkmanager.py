@@ -23,6 +23,11 @@ class TkManager(object):
       if not tagdata.id in self._widgets:
         self._widgets[tagdata.id] = tagdata
 
+  def add_eventhandler(self, func):
+    """
+    """
+    pass
+
   def mainloop(self):
     """
     Call the window's main loop.
