@@ -109,7 +109,7 @@ class Generator(object):
     modules = self._load_modules()
     tree = self._scantree(struct)
     cls  = self._load_class(modules, tree["classname"])
-    root, tag = Generator._instantiate(cls, **tree["params"])
+    root, tag = Generator._instantiate(cls, callback=command, **tree["params"])
     if tag.hasdata(): self._widgets.append(tag)
     _generate_core(tree["children"], root, modules)
     return root
