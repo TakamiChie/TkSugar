@@ -36,6 +36,68 @@ class TagData(object):
     """
     return self.id or self.tag
 
+#region command classes
+
+class CommandBaseClass(object):
+  """
+  A base class that defines the content of commands in YAML files.
+  """
+  def __call__(self, obj, tag, value):
+    self.command(obj, tag, value)
+
+  def command(self, obj, tag, value):
+    """
+    Command executor
+
+    Parameters
+    ----
+    obj: object
+      The associated object.
+    tag: Any
+      Tag object.
+    value: Any
+      The value defined in the YAML file.
+    """
+    raise NotImplementedError
+
+class IdCommand(CommandBaseClass):
+  """
+  A command that associates an object with an internal ID.
+  """
+  def command(self, object, tag, value):
+    tag.id = str(value)
+
+class TagCommand(CommandBaseClass):
+  """
+  A command that associates an object with tag data.
+  """
+  def command(self, object, tag, value):
+    tag.tag = value
+
+class CommandCommand(CommandBaseClass):
+  """
+  A command that associates a callback method that responds to an object's command.
+  """
+  def __init__(self, callback):
+    """
+    Constructor
+
+    Parameters
+    ----
+    callback: func
+      An event handler for processing commands for widgets with the ::command element set.
+    """
+    super().__init__()
+    self.callback = callback
+
+  def command(self, object, tag, value):
+    try:
+      object["command"] = EventReciever(object, tag, self.callback)
+    except tkinter.TclError:
+      pass
+
+#endregion
+
 class EventReciever(object):
   def __init__(self, object, tag, callback):
     self.object = object
@@ -362,17 +424,14 @@ class Generator(object):
     initparams, others = Generator._split_params(cls.__init__, params)
     obj = cls(**initparams)
     tagdata = TagData(obj)
+    commands = {
+      "id": IdCommand(),
+      "tag": TagCommand(),
+    }
+    if callback is not None: commands["command"] = CommandCommand(callback)
     for n, v in others.items():
       if n.startswith("::"):
-        if "id" in n:
-          tagdata.id = v
-        elif "tag" in n:
-          tagdata.tag = v
-        elif "command" in n and not callback is None:
-          try:
-            obj["command"] = EventReciever(obj, tagdata, callback)
-          except tkinter.TclError:
-            pass
+        commands[n[2:]](obj, tagdata, v)
       elif inspect.isroutine(getattr(obj, n)):
         attr = getattr(obj, n)
         attr() if v is None else attr(v)
