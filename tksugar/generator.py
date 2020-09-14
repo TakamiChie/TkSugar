@@ -85,7 +85,7 @@ class Generator(object):
     """
     self._modules.append(*modules)
 
-  def generate(self, command):
+  def generate(self, command=None):
     """
     Generate a Tk window based on the specified files and modules.
 
