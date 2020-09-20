@@ -231,7 +231,8 @@ class Generator(object):
       modules[mod] = importlib.import_module(str(mod))
     return modules
 
-  def _load_class(self, modules, class_name):
+  @staticmethod
+  def _load_class(modules, class_name):
     """
     Search the class with the specified name and
     return the class object of the found class.
@@ -280,7 +281,8 @@ class Generator(object):
     except AttributeError as e:
       raise TypeError(e)
 
-  def _scantree(self, struct):
+  @staticmethod
+  def _scantree(struct):
     """
     Scan an array and convert it to a tree of class names, parameters and child objects
 

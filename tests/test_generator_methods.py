@@ -132,7 +132,7 @@ class Test_Generator_Methods(unittest.TestCase):
     """
     gen = Generator(modules=["tkinter", "tkinter.ttk"])
     mods = gen._load_modules()
-    cls = gen._load_class(mods, "Notebook")
+    cls = Generator._load_class(mods, "Notebook")
     self.assertEquals(type(cls), type)
 
   def test_load_class_onemodule_oneclass(self):
@@ -144,7 +144,7 @@ class Test_Generator_Methods(unittest.TestCase):
     """
     gen = Generator(modules=["tkinter", "tkinter.ttk"])
     mods = gen._load_modules()
-    cls = gen._load_class(mods, "tkinter.ttk.Notebook")
+    cls = Generator._load_class(mods, "tkinter.ttk.Notebook")
     self.assertEquals(type(cls), type)
 
   def test_load_class_underscore(self):
@@ -155,7 +155,7 @@ class Test_Generator_Methods(unittest.TestCase):
     """
     gen = Generator(modules=["tkinter", "tkinter.ttk"])
     mods = gen._load_modules()
-    cls = gen._load_class(mods, "_Notebook")
+    cls = Generator._load_class(mods, "_Notebook")
     self.assertEquals(type(cls), type)
 
   def test_load_class_unmatched_anymodule_oneclass(self):
