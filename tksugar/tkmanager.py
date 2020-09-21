@@ -20,8 +20,8 @@ class TkManager(object):
       tagdata.tag = {
         "tag": tagdata.tag
       }
-      if not tagdata.id in self._widgets:
-        self._widgets[tagdata.id] = tagdata
+      if not tagdata.id in self.widgets:
+        self.widgets[tagdata.id] = tagdata
 
   def mainloop(self):
     """
