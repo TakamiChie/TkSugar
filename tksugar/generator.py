@@ -151,12 +151,15 @@ class Generator(object):
     """
     Generate a Tk window based on the specified files and modules.
 
+    Parameters
+    ----
+    command: func
+      An event handler for processing commands for widgets with the ::command element set.
+
     Returns
     ----
     window: tkinter.Tk
       Tk window object.
-    command: func
-      An event handler for processing commands for widgets with the ::command element set.
     """
     def _generate_core(children, owner, modules):
       for i in children:
