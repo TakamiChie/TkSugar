@@ -11,6 +11,10 @@ _Tk:
         background: #000000
         anchor: e
         grid: {row: 0, column: 0, columnspan: 4, sticky: ew}
+        textvariable: !!var:StringVar
+            name: label
+            default: ""
+        ::id: label
     - _Button:
         text: "C"
         grid: {row: 1, column: 0}

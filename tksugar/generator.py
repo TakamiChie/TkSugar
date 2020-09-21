@@ -36,6 +36,33 @@ class TagData(object):
     """
     return self.id or self.tag
 
+class GeneratorLoader(yaml.SafeLoader):
+  """
+  YAML Loader used in Generator.
+  A custom tag reading process is added.
+  """
+  def __init__(self, stream):
+    super().__init__(stream)
+    self.vars = {}
+    yaml.add_multi_constructor("tag:yaml.org,2002:var", GeneratorLoader.var_handler,
+      Loader=GeneratorLoader)
+
+  @staticmethod
+  def var_handler(loader, suffix, node=None):
+    """
+    A handler that responds to variable definitions.
+    """
+    if suffix[0] == ":": suffix = suffix[1:]
+    name = ""
+    for v in node.value:
+      if v[0].value == "name": name = v[1].value
+    if name != "":
+      var = getattr(tkinter, suffix)
+      loader.vars[name] = var
+      return loader.vars[name]
+    else:
+      raise ValueError("The variable name is not set.")
+
 #region command classes
 
 class CommandBaseClass(object):
@@ -135,6 +162,7 @@ class Generator(object):
         self.string = f.read()
     self._modules = modules
     self._widgets = []
+    self.vars = None
 
   def add_modules(self, *modules):
     """
@@ -168,7 +196,9 @@ class Generator(object):
         if tag.hasdata(): self._widgets.append(tag)
         if i["children"]:
           _generate_core(i["children"], obj, modules)
-    struct = yaml.safe_load(self.string)
+    loader = GeneratorLoader(self.string)
+    struct = loader.get_single_data()
+    self.vars = loader.vars
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
     modules = self._load_modules()
@@ -210,7 +240,7 @@ class Generator(object):
       An event handler for processing commands for widgets with the ::command element set.
     """
     window = self.generate(command=commandhandler)
-    return TkManager(window, self._widgets)
+    return TkManager(window, self._widgets, self.vars)
 
   ### Private Methods
 
