@@ -59,6 +59,7 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertIsNotNone(type(gen.findbyid("test2").widget["textvariable"]))
     self.assertIsNotNone(type(gen.findbyid("test3").widget["textvariable"]))
     self.assertIsNotNone(type(gen.findbyid("test4").widget["textvariable"]))
+    self.assertIs(type(gen.vars["test1"]), tkinter.StringVar)
 
   def test_variable_toplevel_window(self):
     """
