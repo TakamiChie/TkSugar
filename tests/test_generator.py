@@ -91,5 +91,15 @@ class Test_Generator_Methods(unittest.TestCase):
     with self.assertRaises(ValueError):
       gen.generate()
 
+  def test_variable_unknown_name(self):
+    """
+    Confirm that AttributeError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Specify one Tk window in the file.
+    * The widget variable type is a non-existent class name.
+    """
+    gen = Generator("tests/definition/variable_error4.yml")
+    with self.assertRaises(AttributeError):
+      gen.generate()
+
 if __name__ == "__main__":
   unittest.main()
