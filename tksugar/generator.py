@@ -196,11 +196,13 @@ class Generator(object):
         if tag.hasdata(): self._widgets.append(tag)
         if i["children"]:
           _generate_core(i["children"], obj, modules)
+    # Load YAML
     loader = GeneratorLoader(self.string)
     struct = loader.get_single_data()
     self.vars = loader.vars
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
+    # Load Classes
     modules = self._load_modules()
     tree = self._scantree(struct)
     cls  = self._load_class(modules, tree["classname"])
