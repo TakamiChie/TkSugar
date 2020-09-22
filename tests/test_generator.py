@@ -45,5 +45,50 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
     self.assertIsNone(gen.findbyid("unknown"))
 
+  def test_variable(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Specify one Tk window in the file.
+    * There is a widget in the window.
+    * Widget variables are set in the widget.
+    """
+    gen = Generator("tests/definition/variable.yml")
+    tk = gen.generate()
+    self.assertIsNotNone(type(gen.findbyid("test1").widget["textvariable"]))
+    self.assertIsNotNone(type(gen.findbyid("test2").widget["textvariable"]))
+    self.assertIsNotNone(type(gen.findbyid("test3").widget["textvariable"]))
+    self.assertIsNotNone(type(gen.findbyid("test4").widget["textvariable"]))
+
+  def test_variable_toplevel_window(self):
+    """
+    Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Specify one Tk window in the file.
+    * Widget variables are set in the top level window.
+    """
+    gen = Generator("tests/definition/variable_error.yml")
+    with self.assertRaises(ValueError):
+      gen.generate()
+
+  def test_variable_noname(self):
+    """
+    Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Specify one Tk window in the file.
+    * The widget variable does not contain a name.
+    """
+    gen = Generator("tests/definition/variable_error2.yml")
+    with self.assertRaises(ValueError):
+      gen.generate()
+
+  def test_variable_no_variable(self):
+    """
+    Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Specify one Tk window in the file.
+    * Specify the class name of a class that is not a subclass of Variable as the widget variable type.
+    """
+    gen = Generator("tests/definition/variable_error3.yml")
+    with self.assertRaises(ValueError):
+      gen.generate()
+
 if __name__ == "__main__":
   unittest.main()

@@ -1,0 +1,9 @@
+_Tk:
+  title: "TEST Window"
+  variable: !!var:StringVar
+    name: test
+  _Frame:
+    grid:
+    _Button:
+      text: "OK"
+      anchor: "s"

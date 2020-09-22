@@ -1,0 +1,27 @@
+_Tk:
+  title: "TEST Window"
+  _Frame:
+    pack:
+    ::children:
+      - ::params:
+          text: "Test"
+      - _Label:
+          text: "Hello"
+          textvariable: !!var:StringVar
+              name: test1
+          ::id: test1
+      - _Label:
+          textvariable: !!var:IntVar
+              name: test2
+          ::id: test2
+      - _Label:
+          textvariable: !!var:DoubleVar
+              name: test3
+          ::id: test3
+      - _Label:
+          textvariable: !!var:BooleanVar
+              name: test4
+              unknown: test5
+          ::id: test4
+  _Button:
+    width: 5

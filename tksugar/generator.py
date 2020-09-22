@@ -66,6 +66,7 @@ class GeneratorLoader(yaml.SafeLoader):
       if v[0].value == "name": name = v[1].value
     if name != "":
       var = getattr(tkinter, suffix)
+      if not issubclass(var, tkinter.Variable): raise ValueError("The specified class is not a Variable class.")
       loader.vars[name] = var
       return TemporaryVariable(name)
     else:
