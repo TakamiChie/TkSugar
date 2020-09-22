@@ -425,7 +425,7 @@ class Test_Generator_Methods(unittest.TestCase):
     Make sure the class is instantiated.
     * Specify all required parameters.
     """
-    obj, unused = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c")
+    obj, unused = Generator()._instantiate(ClassForTest, a = "a", b = "b", c = "c")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -443,7 +443,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * Specify all non-mandatory parameters.
     """
-    obj, unused = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", d = "d", e = "e", f = "f")
+    obj, unused = Generator()._instantiate(ClassForTest, a = "a", b = "b", c = "c", d = "d", e = "e", f = "f")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -461,7 +461,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * Hold parameters that are not in constructor arguments.
     """
-    obj, unused = Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", g = "g", seth = None, seti = "abc")
+    obj, unused = Generator()._instantiate(ClassForTest, a = "a", b = "b", c = "c", g = "g", seth = None, seti = "abc")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -479,7 +479,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * The order of the required parameters is the reverse of the definition.
     """
-    obj, unused = Generator._instantiate(ClassForTest, c = "c", b = "b", a = "a")
+    obj, unused = Generator()._instantiate(ClassForTest, c = "c", b = "b", a = "a")
     self.assertEqual(obj.a, "a")
     self.assertEqual(obj.b, "b")
     self.assertEqual(obj.c, "c")
@@ -507,7 +507,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Unknown parameter is specified.
     """
     with self.assertRaises(AttributeError):
-      Generator._instantiate(ClassForTest, a = "a", b = "b", c = "c", z = 0)
+      Generator()._instantiate(ClassForTest, a = "a", b = "b", c = "c", z = 0)
 
   def test_instantiate_set_idtags(self):
     """
@@ -516,7 +516,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify all required parameters.
     * ID and tag elements are defined.
     """
-    unused, tag = Generator._instantiate(ClassForTest, **{
+    unused, tag = Generator()._instantiate(ClassForTest, **{
       "a": "a",
       "b": "b",
       "c": "c",

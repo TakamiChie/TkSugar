@@ -437,8 +437,7 @@ class Generator(object):
         del params[p]
     return methodparams, params
 
-  @staticmethod
-  def _instantiate(cls, callback=None, **params):
+  def _instantiate(self, cls, callback=None, **params):
     """
     Generate an object with set properties based on class and property list.
 
