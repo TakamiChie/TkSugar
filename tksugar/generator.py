@@ -36,6 +36,14 @@ class TagData(object):
     """
     return self.id or self.tag
 
+class TemporaryVariable(object):
+  """
+  A temporary variable object that indicates where to replace the tkinter.Variable object.
+  Hold only the variable name.
+  """
+  def __init__(self, name):
+    self.name = name
+
 class GeneratorLoader(yaml.SafeLoader):
   """
   YAML Loader used in Generator.
@@ -59,7 +67,7 @@ class GeneratorLoader(yaml.SafeLoader):
     if name != "":
       var = getattr(tkinter, suffix)
       loader.vars[name] = var
-      return loader.vars[name]
+      return TemporaryVariable(name)
     else:
       raise ValueError("The variable name is not set.")
 
@@ -202,12 +210,17 @@ class Generator(object):
     self.vars = loader.vars
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
-    # Load Classes
+    # Prepare
     modules = self._load_modules()
     tree = self._scantree(struct)
+    # Load Root Object
     cls  = self._load_class(modules, tree["classname"])
-    root, tag = Generator._instantiate(cls, callback=command, **tree["params"])
+    root, tag = self._instantiate(cls, callback=command, **tree["params"])
     if tag.hasdata(): self._widgets.append(tag)
+    # Load Variable
+    for n in self.vars.keys():
+      self.vars[n] = self.vars[n](master=root)
+    # Load Child Object
     _generate_core(tree["children"], root, modules)
     return root
 
@@ -457,14 +470,23 @@ class Generator(object):
     tagdata: TagData
       Widget additional data.
     """
+    # Prepare
+    for n in params:
+      if type(params[n]) is TemporaryVariable:
+        if "master" in params:
+          params[n] = self.vars[params[n].name]
+        else:
+          raise ValueError("Widget variables cannot be included in top-level windows.")
     initparams, others = Generator._split_params(cls.__init__, params)
-    obj = cls(**initparams)
-    tagdata = TagData(obj)
     commands = {
       "id": IdCommand(),
       "tag": TagCommand(),
     }
     if callback is not None: commands["command"] = CommandCommand(callback)
+    # Instantiation
+    obj = cls(**initparams)
+    tagdata = TagData(obj)
+    # Other property settings
     for n, v in others.items():
       if n.startswith("::"):
         commands[n[2:]](obj, tagdata, v)
