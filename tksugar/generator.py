@@ -207,7 +207,10 @@ class Generator(object):
           _generate_core(i["children"], obj, modules)
     # Load YAML
     loader = GeneratorLoader(self.string)
-    struct = loader.get_single_data()
+    try:
+      struct = loader.get_single_data()
+    finally:
+      loader.dispose()
     self.vars = loader.vars
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
