@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-from tksugar.generator import TagData
 
 sys.path.append(str(Path(__file__).parent.parent))
 from tksugar import Generator
