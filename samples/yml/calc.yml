@@ -76,4 +76,5 @@ _Tk:
     - _Button:
         text: "="
         grid: {row: 5, column: 3}
+        ::id: equal
 
