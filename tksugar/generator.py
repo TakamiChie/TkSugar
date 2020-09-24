@@ -24,6 +24,7 @@ class TagData(object):
     self.widget = widget
     self.id = None
     self.tag= None
+    self.callback = None
 
   def hasdata(self):
     """
@@ -35,6 +36,13 @@ class TagData(object):
       True if there is data
     """
     return self.id or self.tag
+
+  def performclick(self):
+    """
+    If the button has a command, execute it.
+    """
+    if self.callback is not None:
+      self.callback(self.widget, self)
 
 class TemporaryVariable(object):
   """
@@ -490,6 +498,8 @@ class Generator(object):
     # Instantiation
     obj = cls(**initparams)
     tagdata = TagData(obj)
+    if callback is not None:
+      tagdata.callback = callback
     # Other property settings
     for n, v in others.items():
       if n.startswith("::"):

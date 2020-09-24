@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from tksugar.generator import TagData
 
 sys.path.append(str(Path(__file__).parent.parent))
 from tksugar import Generator
@@ -29,7 +30,7 @@ def calcbutton(button, tag):
     if calctext[-1] in [".", "+", "-", "*", "/"]:
       calctext = calctext[:-1]
     var.set(calctext + "*0.01")
-    calcbutton(manager.widgets["equal"].widget, manager.widgets["equal"]) # Perfome Click.
+    manager.widgets["equal"].performclick()
     return
   else:
     # Do not press the button if the operator or calculation string is empty immediately before.
