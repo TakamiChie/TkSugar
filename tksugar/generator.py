@@ -255,7 +255,7 @@ class Generator(object):
     l = list(filter(lambda x: x.id == id, self._widgets))
     return None if l == [] else l[0]
 
-  def get_manager(self, commandhandler):
+  def get_manager(self, commandhandler=None):
     """
     Create a window, store it in the `TkManager` that manages the window, and return it.
 
