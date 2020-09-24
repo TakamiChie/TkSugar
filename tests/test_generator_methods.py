@@ -248,6 +248,21 @@ class Test_Generator_Methods(unittest.TestCase):
       self.assertEqual(tree["children"][0]["children"][0]["classname"], "Label")
       self.assertEqual(tree["children"][0]["children"][1]["classname"], "Label")
 
+  def test_scantree_children_notlist(self):
+    """
+    When calling the `Generator#_scantree()` method under the following conditions,
+    Confirm that AttributeError occurs.
+    * Specify one Tk window in the file.
+    * There is a widget in the window.
+    * `::children` element exists.
+    * The child element of the `::children` element is not a list(dict).
+    """
+    gen = Generator(modules=["tkinter"])
+    with open("tests/definition/children_error.yml", "r") as f:
+      struct = yaml.safe_load(f)
+      with self.assertRaises(AttributeError):
+        gen._scantree(struct)
+
   def test_scantree_params_inside_child(self):
     """
     When calling the `Generator#_scantree()` method under the following conditions,

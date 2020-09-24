@@ -1,0 +1,11 @@
+_Tk:
+  title: "TEST Window"
+  _Frame:
+    pack:
+    ::children:
+      _Label:
+        text: "Hello"
+        pack:
+      _Button:
+        text: "Test"
+        pack:

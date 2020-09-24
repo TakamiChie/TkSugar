@@ -382,6 +382,8 @@ class Generator(object):
         if n[0] == "_":
           props["children"].append(_scantree_core({n: v}, params))
         elif n == "::children":
+          if type(v) is not list:
+            raise AttributeError("The child elements of the ::children node must be an list.")
           inparam = dict(params)
           for item in v:
             r = _scantree_core(item, inparam)
