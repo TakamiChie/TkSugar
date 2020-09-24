@@ -36,6 +36,16 @@ class ClassForTest(object):
     """
     pass
 
+  @staticmethod
+  def k():
+    """
+    This method has documentation comments.
+
+    Valid resource names:g, i,
+    j, k, l
+    """
+    pass
+
 class Test_Generator_Methods(unittest.TestCase):
   """
   Method tests other than the `generate()` method of the Generator class.
@@ -358,6 +368,16 @@ class Test_Generator_Methods(unittest.TestCase):
     * Document comment is set in the method passed as an argument
     """
     list = Generator._get_argnames(ClassForTest.j)
+    self.assertListEqual(list, ["g", "i", "j", "k", "l"])
+
+  def test_get_argnames_has_docstring_shorttype(self):
+    """
+    When you call `Generator#get_argnames()` under the following conditions,
+    Make sure to generate an argument list.
+    * Document comment is set in the method passed as an argument
+    * The format of DocString is short.
+    """
+    list = Generator._get_argnames(ClassForTest.k)
     self.assertListEqual(list, ["g", "i", "j", "k", "l"])
 
   #endregion

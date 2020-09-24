@@ -435,6 +435,9 @@ class Generator(object):
         if "STANDARD OPTIONS" in lines[i] or "WIDGET-SPECIFIC OPTIONS" in lines[i]:
           collect = True
           i += 1
+        if "Valid resource names:" in lines[i]:
+          collect = True
+          i -= 1
       i += 1
     return result
 
