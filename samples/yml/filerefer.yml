@@ -7,7 +7,7 @@ _Tk:
       index: 1
       weight: 1
     ::gridrow:
-      index: 0
+      index: 1
       weight: 1
     ::children:
       - _Label:
@@ -15,12 +15,37 @@ _Tk:
           grid: {row: 0, column: 0, padx: 2, pady: 1}
       - _Entry:
           textvariable: !!var:StringVar
-            name: textbox
+            name: file
             default: ""
-          ::id: textbox
           grid: {row: 0, column: 1, padx: 4, sticky: ew}
       - _Button:
           text: File...
-          ::tag: textbox
+          ::tag: file
           ::command:
           grid: {row: 0, column: 2, ipadx: 4, ipady: 2}
+      - _Label:
+          text: Dir
+          grid: {row: 1, column: 0, padx: 2, pady: 1}
+      - _Entry:
+          textvariable: !!var:StringVar
+            name: dir
+            default: ""
+          grid: {row: 1, column: 1, padx: 4, sticky: ew}
+      - _Button:
+          text: Dir...
+          ::tag: dir
+          ::command:
+          grid: {row: 1, column: 2, ipadx: 4, ipady: 2}
+      - _Label:
+          text: Save
+          grid: {row: 2, column: 0, padx: 2, pady: 1}
+      - _Entry:
+          textvariable: !!var:StringVar
+            name: save
+            default: ""
+          grid: {row: 2, column: 1, padx: 4, sticky: ew}
+      - _Button:
+          text: Save...
+          ::tag: save
+          ::command:
+          grid: {row: 2, column: 2, ipadx: 4, ipady: 2}
