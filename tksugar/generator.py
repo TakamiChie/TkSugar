@@ -86,6 +86,17 @@ class CommandBaseClass(object):
   """
   A base class that defines the content of commands in YAML files.
   """
+  def __init__(self, postactions):
+    """
+    constuructor
+
+    Parameters
+    ----
+    postactions: list
+      If there is a method you want to call after creating the object list, add it to this list.
+    """
+    self.postactions = postactions
+
   def __call__(self, obj, tag, value):
     self.command(obj, tag, value)
 
@@ -122,7 +133,7 @@ class CommandCommand(CommandBaseClass):
   """
   A command that associates a callback method that responds to an object's command.
   """
-  def __init__(self, callback):
+  def __init__(self, postactions, callback):
     """
     Constructor
 
@@ -131,7 +142,7 @@ class CommandCommand(CommandBaseClass):
     callback: func
       An event handler for processing commands for widgets with the ::command element set.
     """
-    super().__init__()
+    super().__init__(postactions)
     self.callback = callback
 
   def command(self, object, tag, value):
@@ -139,6 +150,54 @@ class CommandCommand(CommandBaseClass):
       object["command"] = EventReciever(object, tag, self.callback)
     except tkinter.TclError:
       pass
+
+class GridColumnCommand(CommandBaseClass):
+  """
+  Configure columns on the grid.
+
+  Parameters at Commands
+  ----
+  index: int
+    Column index.
+  minsize: int
+    Specify the minimum width / height numerically.
+  weight: int
+    Specify the ratio when allocating the margin numerically.
+  pad: int
+    Specify the padding numerically.
+  """
+
+  def command(self, object, tag, value):
+    def _command():
+      indx = value["index"]
+      del value["index"]
+      object.grid_columnconfigure(indx, value)
+
+    self.postactions.append(_command)
+
+class GridRowCommand(CommandBaseClass):
+  """
+  Configure columns on the grid.
+
+  Parameters at Commands
+  ----
+  index: int
+    Row index.
+  minsize: int
+    Specify the minimum width / height numerically.
+  weight: int
+    Specify the ratio when allocating the margin numerically.
+  pad: int
+    Specify the padding numerically.
+  """
+
+  def command(self, object, tag, value):
+    def _command():
+      indx = value["index"]
+      del value["index"]
+      object.grid_rowconfigure(indx, value)
+
+    self.postactions.append(_command)
 
 #endregion
 
@@ -495,11 +554,14 @@ class Generator(object):
         else:
           raise ValueError("Widget variables cannot be included in top-level windows.")
     initparams, others = Generator._split_params(cls.__init__, params)
+    postactions = []
     commands = {
-      "id": IdCommand(),
-      "tag": TagCommand(),
+      "id": IdCommand(postactions),
+      "tag": TagCommand(postactions),
+      "gridcolumn": GridColumnCommand(postactions),
+      "gridrow": GridRowCommand(postactions),
     }
-    if callback is not None: commands["command"] = CommandCommand(callback)
+    if callback is not None: commands["command"] = CommandCommand(postactions, callback)
     # Instantiation
     obj = cls(**initparams)
     tagdata = TagData(obj)
@@ -514,6 +576,9 @@ class Generator(object):
         attr() if v is None else attr(v)
       else:
         setattr(obj, n, v)
+    # Post actions
+    for fun in postactions:
+      fun()
     return obj, tagdata
 
 if __name__ == "__main__":
