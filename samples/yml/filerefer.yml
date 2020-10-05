@@ -1,0 +1,26 @@
+_Tk:
+  title: File Refer box
+  _Frame:
+    bg: white
+    pack: { padx: 4, pady: 4, fill: both, expand: 1}
+    ::gridcolumn:
+      index: 1
+      weight: 1
+    ::gridrow:
+      index: 0
+      weight: 1
+    ::children:
+      - _Label:
+          text: File
+          grid: {row: 0, column: 0, padx: 2, pady: 1}
+      - _Entry:
+          textvariable: !!var:StringVar
+            name: textbox
+            default: ""
+          ::id: textbox
+          grid: {row: 0, column: 1, padx: 4, sticky: ew}
+      - _Button:
+          text: File...
+          ::tag: textbox
+          ::command:
+          grid: {row: 0, column: 2, ipadx: 4, ipady: 2}
