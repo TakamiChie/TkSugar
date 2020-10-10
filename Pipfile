@@ -10,3 +10,9 @@ pyyaml = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+clear = "pwsh -c Remove-Item -Recurse -Force *.egg-info, build, dist"
+build = "python setup.py sdist bdist_wheel"
+deploytest = "twine upload --repository testpypi dist/*"
+deploy = "twine upload --repository pypi dist/*"
