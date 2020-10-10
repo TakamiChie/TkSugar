@@ -41,7 +41,7 @@ class ClassForTest(object):
     """
     This method has documentation comments.
 
-    Valid resource names:g, i,
+    Valid resource names: g, i,
     j, k, l
     """
     pass
