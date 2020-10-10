@@ -1,6 +1,7 @@
 import importlib
 import inspect
 import tkinter
+import re
 from typing import Type
 
 import yaml
@@ -488,14 +489,15 @@ class Generator(object):
         if lines[i] == "":
           collect = False
         else:
-          for p in lines[i].strip().split(","):
-            if p != "": result.append(p.strip())
+          for p in filter(lambda x: x, re.split("[\s,]", lines[i].strip())):
+            result.append(p.strip())
       else:
         if "STANDARD OPTIONS" in lines[i] or "WIDGET-SPECIFIC OPTIONS" in lines[i]:
           collect = True
           i += 1
         if "Valid resource names:" in lines[i]:
           collect = True
+          lines[i] = lines[i].split(":")[1]
           i -= 1
       i += 1
     return result
