@@ -1,0 +1,10 @@
+_Toplevel:
+  title: Multiwindow(Child)
+  geometry: 300x200
+  _Label:
+      ::id: label
+      pack:
+          anchor: center
+          expand: 1
+
+

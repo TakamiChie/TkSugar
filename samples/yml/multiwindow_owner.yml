@@ -1,0 +1,20 @@
+_Tk:
+  title: Multiwindow(Owner)
+  geometry: 300x200
+  ::children:
+    - _Button:
+        text: "Press Me!"
+        ::command:
+        pack:
+            anchor: center
+            expand: 1
+    - _Checkbutton:
+        text: "Make it a modal dialog"
+        variable: !!var:BooleanVar
+            name: modal
+        pack:
+            anchor: center
+            expand: 1
+
+
+
