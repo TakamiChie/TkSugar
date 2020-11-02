@@ -31,3 +31,10 @@ class TkManager(object):
     Call the window's main loop.
     """
     self._window.mainloop()
+
+  @property
+  def window(self):
+    """
+    Get a window object.
+    """
+    return self._window
