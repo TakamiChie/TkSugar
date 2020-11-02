@@ -395,7 +395,7 @@ class Generator(object):
           break
 
     if mod is None:
-      raise TypeError("Class not found.")
+      raise TypeError(f'Class not found. "{class_name}"')
     try:
       return getattr(modules[mod], cls)
     except AttributeError as e:
