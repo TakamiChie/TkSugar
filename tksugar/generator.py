@@ -433,6 +433,8 @@ class Generator(object):
           items = dict(params["params"], **struct[rootname])
       else:
         items = struct[rootname]
+        if items is None:
+          raise ValueError(f'Missing value or element in node name "{rootname}". Is the indentation level wrong?')
       # rootname check.
       if rootname == "::params":
         params["params"] = items
