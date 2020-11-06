@@ -34,9 +34,11 @@ class ReferBox(tkinter.Frame):
     constructor
 
     STANDARD OPTIONS
+
     textvariable
     """
-    tkinter.Frame.__init__(self, master, cnf, **kw)
+    tkinter.Frame.__init__(self, master, cnf)
+    self._command = None
     self.grid()
     self.textbox = tkinter.Entry(self, kw)
     self.textbox.grid(row=0, column=0, sticky="ew", padx=4, ipadx=2, ipady=2)
@@ -64,6 +66,22 @@ class ReferBox(tkinter.Frame):
       if n != "":
         self.textbox.delete(0, tkinter.END)
         self.textbox.insert(0, n)
+    if self.command:
+      self.command()
+
+  @property
+  def command(self):
+    """
+    Gets or sets an event handler that will be executed when the button is pressed.
+    """
+    return self._command
+
+  @command.setter
+  def command(self, value):
+    """
+    Gets or sets an event handler that will be executed when the button is pressed.
+    """
+    self._command = value
 
   def buttons(self, buttonparams):
     """
@@ -92,11 +110,14 @@ class ReferBox(tkinter.Frame):
       b.grid(row=0, column=ci, ipadx=2, ipady=2)
       ci += 1
     self.grid_columnconfigure(0, weight=1)
+    if self._command:
+      self._command()
+
+def change(button, tag):
+  path = Path(manager.vars["multiplerefer"].get())
+  manager.vars["syncrefer"].set(str(path.parent))
 
 if __name__ == "__main__":
-  tk = tkinter.Tk()
-  refer = ReferBox(tk)
-  refer.buttons([{"caption":"File...", "type": ReferBox.FILEOPEN, "filter": [("All Files", "*.*")]},
-    {"caption":"Folder...", "type": ReferBox.ASKDIR}])
-  refer.pack(side=tkinter.LEFT, fill=tkinter.BOTH, expand=True)
-  tk.mainloop()
+  gen = Generator("samples\yml\customwidget.yml", modules=["tkinter", "samples.customwidget"])
+  manager = gen.get_manager(commandhandler=change)
+  manager.mainloop()

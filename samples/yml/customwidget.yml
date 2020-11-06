@@ -1,0 +1,62 @@
+_Tk:
+  title: Custom Widget
+  _Frame:
+    pack: { padx: 4, pady: 4, fill: both, expand: 1}
+    ::gridcolumn:
+      index: 1
+      weight: 1
+    ::gridrow:
+      index: 1
+      weight: 1
+    ::children:
+      - _Label:
+          text: "File Refer"
+          grid: {row: 0, column: 0}
+      - _ReferBox:
+          buttons:
+            -
+              caption: File...
+              type: fileopen
+              filter: [ ["All Files", "*.*"] ]
+          grid: {row: 0, column: 1, sticky: ew}
+      #
+      - _Label:
+          text: "Folder Refer"
+          grid: {row: 1, column: 0}
+      - _ReferBox:
+          buttons:
+            -
+              caption: Dir...
+              type: askdir
+          grid: {row: 1, column: 1, sticky: ew}
+      #
+      - _Label:
+          text: "Multiple Refer"
+          grid: {row: 2, column: 0}
+      - _ReferBox:
+          buttons:
+            -
+              caption: File...
+              type: fileopen
+              filter: [ ["All Files", "*.*"] ]
+            -
+              caption: Dir...
+              type: askdir
+          textvariable: !!var:StringVar
+            name: multiplerefer
+            default: ""
+          ::command:
+          grid: {row: 2, column: 1, sticky: ew}
+      #
+      - _Label:
+          text: "Sync Refer"
+          grid: {row: 3, column: 0}
+      - _ReferBox:
+          buttons:
+            -
+              caption: Dir...
+              type: askdir
+          textvariable: !!var:StringVar
+            name: syncrefer
+            default: ""
+          grid: {row: 3, column: 1, sticky: ew}
