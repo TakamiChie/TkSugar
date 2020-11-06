@@ -148,7 +148,11 @@ class CommandCommand(CommandBaseClass):
 
   def command(self, object, tag, value):
     try:
-      object["command"] = EventReciever(object, tag, self.callback)
+      resv = EventReciever(object, tag, self.callback)
+      if "command" in dir(object):
+        setattr(object, "command", resv)
+      else:
+        object["command"] = resv
     except tkinter.TclError:
       pass
 
