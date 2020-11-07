@@ -1,0 +1,5 @@
+_Tk:
+  title: Multi File
+  geometry: 300x200
+  ::children:
+    - _Button: !include multifile_sub.yml

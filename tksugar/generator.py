@@ -1,10 +1,12 @@
 import importlib
 import inspect
+from pathlib import Path
 import tkinter
 import re
 from typing import Type
 
 import yaml
+from yamlinclude import YamlIncludeConstructor
 
 from tksugar.tkmanager import TkManager
 
@@ -230,6 +232,8 @@ class Generator(object):
       A file path describing the window's object and layout.
       This argument can be omitted, but in actual use it is not omitted in principle.
       Omitted only when testing.
+      If you omit the file name, YamlIncludeConstructor will not be deleted, so YAML's `!Include` will remain valid.
+      However, this operation is not dealt with because it is impossible in principle to omit the file in the first place and there is no actual harm.
     modules: list[str]
       An array indicating the name of the module to be used.
       By default, it is "tkinter" only.
@@ -241,6 +245,7 @@ class Generator(object):
     if file:
       with open(file, "r") as f:
         self.string = f.read()
+      YamlIncludeConstructor.add_to_loader_class(loader_class=GeneratorLoader, base_dir=str(Path(file).parent))
     self._modules = modules
     self._widgets = []
     self.vars = None

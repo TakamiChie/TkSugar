@@ -1,5 +1,6 @@
 import unittest
 import tkinter
+import yaml
 
 from tksugar.generator import Generator
 
@@ -60,6 +61,28 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertIsNotNone(type(gen.findbyid("test3").widget["textvariable"]))
     self.assertIsNotNone(type(gen.findbyid("test4").widget["textvariable"]))
     self.assertIs(type(gen.vars["test1"]), tkinter.StringVar)
+
+  def test_include(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Include another YAML file within a YAML file.
+    """
+    gen = Generator("tests/definition/multiple_files.yml")
+    tk = gen.generate()
+    self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
+
+  def test_include_multidir(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Include another YAML file within a YAML file.
+    * The file path of the YAML file read the first time and the YAML file read the second time are different.
+    """
+    Generator("tests/definition/multiple_files.yml")
+    gen = Generator("tests/definition/testdir/multiple_files.yml")
+    tk = gen.generate()
+    self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
 
   def test_variable_toplevel_window(self):
     """

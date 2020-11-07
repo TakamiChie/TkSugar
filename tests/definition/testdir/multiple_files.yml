@@ -1,0 +1,5 @@
+_Tk:
+  title: "TEST Window"
+  _Frame:
+    grid:
+    _Button: !include ../multiple_files_sub.yml
