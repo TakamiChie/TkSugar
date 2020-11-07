@@ -9,6 +9,10 @@ class Test_Generator_Methods(unittest.TestCase):
   Tests the `Generator#generate()` method.
   """
 
+  def setUp(self):
+    if tkinter._default_root:
+      tkinter._default_root.destroy()
+
   #region Test of normal operation.
 
   def test_plane(self):
@@ -74,6 +78,18 @@ class Test_Generator_Methods(unittest.TestCase):
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
 
+  def test_multinode(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Read a YAML file consisting of multiple nodes.
+    * After reading the YAML file consisting of a single node.
+    """
+    Generator("tests/definition/plane.yml").generate()
+    gen = Generator("tests/definition/multinode.yml")
+    widgets = gen.generate()
+    self.assertEquals(len(widgets), 3)
+
   #endregion
 
   #region Test of semi-normal operation
@@ -132,6 +148,16 @@ class Test_Generator_Methods(unittest.TestCase):
     """
     gen = Generator("tests/definition/variable_error4.yml")
     with self.assertRaises(AttributeError):
+      gen.generate()
+
+  def test_multinode_valueerror(self):
+    """
+    Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Read a YAML file consisting of multiple nodes.
+    * Generator is not reading a YAML file consisting of a single node.
+    """
+    gen = Generator("tests/definition/multinode.yml")
+    with self.assertRaises(ValueError):
       gen.generate()
 
   #endregion

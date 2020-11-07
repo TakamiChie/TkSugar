@@ -272,16 +272,22 @@ class Generator(object):
 
     Returns
     ----
-    window: tkinter.Tk
+    window: tkinter.Tk or list(tkinter.Widget)
       Tk window object.
-    """
+      If the read YAML file contains multiple nodes, the behavior is as follows.
+      * If the Tk window has already been generated, return the list of widgets.
+      * If the Tk window has not been created, a ValueError will occur.
+      """
     def _generate_core(children, owner, modules):
+      result = []
       for i in children:
         cls = self._load_class(modules, i["classname"])
         obj, tag = self._instantiate(cls, callback=command, master=owner, **i["params"])
+        result.append(obj)
         if tag.hasdata(): self._widgets.append(tag)
         if i["children"]:
           _generate_core(i["children"], obj, modules)
+      return result
     # Load YAML
     loader = GeneratorLoader(self.string)
     try:
@@ -289,21 +295,32 @@ class Generator(object):
     finally:
       loader.dispose()
     self.vars = loader.vars
-    if not type(struct) is dict or len(struct) > 1:
-      raise ValueError("The root node must be a dict and single.")
     # Prepare
     modules = self._load_modules()
     tree = self._scantree(struct)
-    # Load Root Object
-    cls  = self._load_class(modules, tree["classname"])
-    root, tag = self._instantiate(cls, callback=command, **tree["params"])
-    if tag.hasdata(): self._widgets.append(tag)
-    # Load Variable
-    for n in self.vars.keys():
-      self.vars[n] = self.vars[n](master=root)
-    # Load Child Object
-    _generate_core(tree["children"], root, modules)
-    return root
+    if not tkinter._default_root:
+      if not type(struct) is dict or len(struct) > 1:
+        raise ValueError("The root node must be a dict and single.")
+      # Load Root Object
+      cls  = self._load_class(modules, tree["classname"])
+      root, tag = self._instantiate(cls, callback=command, **tree["params"])
+      if tag.hasdata(): self._widgets.append(tag)
+      # Load Variable
+      for n in self.vars.keys():
+        self.vars[n] = self.vars[n](master=root)
+      # Load Child Object
+      _generate_core(tree["children"], root, modules)
+      return root
+    else:
+      items = []
+      if type(struct) is list:
+        items = tree
+      elif type(struct) is dict:
+        for n, v in tree.items():
+          items.append({n: v})
+      else:
+        raise ValueError("The structure must be a list or dict.")
+      return _generate_core(items, None, modules)
 
   def findbyid(self, id):
     """
@@ -426,47 +443,55 @@ class Generator(object):
       Tree data
     """
     def _scantree_core(struct, params):
-      props = {
-        "classname": "",
-        "params": {},
-        "children": [],
-      }
-      rootname = next(iter(struct))
-      props["classname"] = rootname[1:]
-      items = {}
-      # merge params.
-      if "params" in params:
-        if struct[rootname] is None:
-          items = params["params"]
-        else:
-          items = dict(params["params"], **struct[rootname])
-      else:
-        items = struct[rootname]
-        if items is None:
-          raise ValueError(f'Missing value or element in node name "{rootname}". Is the indentation level wrong?')
-      # rootname check.
-      if rootname == "::params":
-        params["params"] = items
-        return None
-      # parse.
-      for n, v in items.items():
-        if n[0] == "_":
-          props["children"].append(_scantree_core({n: v}, params))
-        elif n == "::children":
-          if type(v) is not list:
-            raise AttributeError("The child elements of the ::children node must be an list.")
-          inparam = dict(params)
-          for item in v:
-            r = _scantree_core(item, inparam)
-            if r is not None: props["children"].append(r)
-        elif n == "::params":
-          params["params"] = v
-        else:
-          if v is None:
-            props["params"][n] = None
+      if type(struct) is list:
+        result = []
+        for s in struct:
+          result.append(_scantree_core(s, params))
+        return result
+      elif type(struct) is dict:
+        props = {
+          "classname": "",
+          "params": {},
+          "children": [],
+        }
+        rootname = next(iter(struct))
+        props["classname"] = rootname[1:]
+        items = {}
+        # merge params.
+        if "params" in params:
+          if struct[rootname] is None:
+            items = params["params"]
           else:
-            props["params"][n] = v
-      return props
+            items = dict(params["params"], **struct[rootname])
+        else:
+          items = struct[rootname]
+          if items is None:
+            raise ValueError(f'Missing value or element in node name "{rootname}". Is the indentation level wrong?')
+        # rootname check.
+        if rootname == "::params":
+          params["params"] = items
+          return None
+        # parse.
+        for n, v in items.items():
+          if n[0] == "_":
+            props["children"].append(_scantree_core({n: v}, params))
+          elif n == "::children":
+            if type(v) is not list:
+              raise AttributeError("The child elements of the ::children node must be an list.")
+            inparam = dict(params)
+            for item in v:
+              r = _scantree_core(item, inparam)
+              if r is not None: props["children"].append(r)
+          elif n == "::params":
+            params["params"] = v
+          else:
+            if v is None:
+              props["params"][n] = None
+            else:
+              props["params"][n] = v
+        return props
+      else:
+        raise ValueError("The structure must be a list or dict.") # Should not come here
     return _scantree_core(struct, {})
 
   @staticmethod
