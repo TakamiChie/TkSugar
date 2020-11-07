@@ -83,12 +83,27 @@ class Test_Generator_Methods(unittest.TestCase):
     Confirm that the target Tk window is created when the `Generator#generate()` method
     is called under the following conditions.
     * Read a YAML file consisting of multiple nodes.
+    * The top-level node in the YAML file is the list.
     * After reading the YAML file consisting of a single node.
     """
     Generator("tests/definition/plane.yml").generate()
     gen = Generator("tests/definition/multinode.yml")
     widgets = gen.generate()
     self.assertEquals(len(widgets), 3)
+
+  def test_multinode_hash(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Read a YAML file consisting of multiple nodes.
+    * The top-level node in the YAML file is the dict.
+    * After reading the YAML file consisting of a single node.
+    """
+    Generator("tests/definition/plane.yml").generate()
+    gen = Generator("tests/definition/multinode_hash.yml")
+    widgets = gen.generate()
+    self.assertIs(type(widgets[0]), tkinter.Button)
+    self.assertIs(type(widgets[1]), tkinter.Label)
 
   #endregion
 
@@ -157,6 +172,19 @@ class Test_Generator_Methods(unittest.TestCase):
     * Generator is not reading a YAML file consisting of a single node.
     """
     gen = Generator("tests/definition/multinode.yml")
+    with self.assertRaises(ValueError):
+      gen.generate()
+
+  def test_multinode_node_valueerror(self):
+    """
+    Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Read a YAML file consisting of multiple nodes.
+    * The top-level node of the YAML file is neither dict nor list.
+    * Read a YAML file consisting of multiple nodes.
+    * After reading the YAML file consisting of a single node.
+    """
+    Generator("tests/definition/plane.yml").generate()
+    gen = Generator("tests/definition/multinode_value.yml")
     with self.assertRaises(ValueError):
       gen.generate()
 

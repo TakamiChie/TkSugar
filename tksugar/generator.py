@@ -297,10 +297,10 @@ class Generator(object):
     self.vars = loader.vars
     # Prepare
     modules = self._load_modules()
-    tree = self._scantree(struct)
     if not tkinter._default_root:
       if not type(struct) is dict or len(struct) > 1:
         raise ValueError("The root node must be a dict and single.")
+      tree = self._scantree(struct)
       # Load Root Object
       cls  = self._load_class(modules, tree["classname"])
       root, tag = self._instantiate(cls, callback=command, **tree["params"])
@@ -312,15 +312,16 @@ class Generator(object):
       _generate_core(tree["children"], root, modules)
       return root
     else:
-      items = []
       if type(struct) is list:
-        items = tree
+        tree = self._scantree(struct)
       elif type(struct) is dict:
-        for n, v in tree.items():
+        items = []
+        for n, v in struct.items():
           items.append({n: v})
+        tree = self._scantree(items)
       else:
         raise ValueError("The structure must be a list or dict.")
-      return _generate_core(items, None, modules)
+      return _generate_core(tree, None, modules)
 
   def findbyid(self, id):
     """
