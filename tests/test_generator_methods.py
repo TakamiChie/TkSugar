@@ -525,6 +525,31 @@ class Test_Generator_Methods(unittest.TestCase):
     self.assertEqual(obj.h, False)
     self.assertEqual(obj.i, None)
 
+  def test_instantiate_classparam(self):
+    """
+    When you call `Generator#_instantiate()` under the following conditions,
+    Make sure that parameters starting with `_` and `::` are not treated as class values.
+    * Specify all required parameters.
+    """
+    obj, unused = Generator()._instantiate(ClassForTest, **{
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "_d": "d",
+      "::id": "e",
+    })
+    self.assertEqual(obj.a, "a")
+    self.assertEqual(obj.b, "b")
+    self.assertEqual(obj.c, "c")
+    self.assertEqual(obj.d, 1)
+    self.assertEqual(obj.e, 2)
+    self.assertEqual(obj.f, 3)
+    self.assertEqual(obj.g, None)
+    self.assertEqual(obj.h, False)
+    self.assertEqual(obj.i, None)
+    self.assertFalse(hasattr(obj, "_d"))
+    self.assertFalse(hasattr(obj, "::id"))
+
   def test_instantiate_no_require_params(self):
     """
     When you call `Generator#_instantiate()` under the following conditions,
