@@ -1,0 +1,5 @@
+_TestOwner:
+  _TestChildObject:
+    a: 1
+    /a: 1
+    /b: a

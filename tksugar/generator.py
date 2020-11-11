@@ -9,6 +9,7 @@ import yaml
 from yamlinclude import YamlIncludeConstructor
 
 from tksugar.tkmanager import TkManager
+from tksugar.widgets.generatorsupport import GeneratorSupport
 
 class TagData(object):
   """
@@ -278,7 +279,18 @@ class Generator(object):
     def _generate_core(children, owner, modules):
       for i in children:
         cls = self._load_class(modules, i["classname"])
-        obj, tag = self._instantiate(cls, callback=command, master=owner, **i["params"])
+        objparam = i["params"]
+        if not issubclass(type(owner), GeneratorSupport):
+          # GenetratorSupport non inherited class, which adds a master parameter and adds a child object.
+          objparam["master"] = owner
+        obj, tag = self._instantiate(cls, callback=command, **objparam)
+        if issubclass(type(owner), GeneratorSupport):
+          # GeneratorSupport inherited class, which adds a child object via append_child.
+          childparam = {}
+          for n, v in objparam.items():
+            if n.startswith("/"):
+              childparam[n[1:]] = v
+          owner.append_child(obj, **childparam)
         if tag.hasdata(): self._widgets.append(tag)
         if i["children"]:
           _generate_core(i["children"], obj, modules)
