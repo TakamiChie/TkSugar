@@ -535,7 +535,7 @@ class Test_Generator_Methods(unittest.TestCase):
       "a": "a",
       "b": "b",
       "c": "c",
-      "_d": "d",
+      "/d": "d",
       "::id": "e",
     })
     self.assertEqual(obj.a, "a")

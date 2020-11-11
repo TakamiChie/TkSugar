@@ -584,7 +584,7 @@ class Generator(object):
     for n, v in others.items():
       if n.startswith("::"):
         commands[n[2:]](obj, tagdata, v)
-      elif n.startswith("_"):
+      elif n.startswith("/"):
         pass
       elif inspect.isroutine(getattr(obj, n)):
         attr = getattr(obj, n)
