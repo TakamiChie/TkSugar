@@ -223,7 +223,7 @@ class Generator(object):
   The core object that creates the Tk window.
   Users of this module will use this core object to generate a Tk window.
   """
-  def __init__(self, file="",modules=["tkinter"]):
+  def __init__(self, file="",modules=["tksugar.widgets", "tkinter"]):
     """
     constructor.
 
@@ -410,7 +410,7 @@ class Generator(object):
       # Module search
       cls = class_name
       for module in modules.keys():
-        cllist = map(lambda x: x[0], inspect.getmembers(modules[module], inspect.isclass))
+        cllist = list(map(lambda x: x[0], inspect.getmembers(modules[module], inspect.isclass)))
         if cls in cllist:
           mod = module
           break

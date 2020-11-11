@@ -5,3 +5,4 @@ This package is referenced with the highest priority when the Generator is execu
 Therefore, even if there is a widget with the same name in another module, this module will be called.
 """
 from tksugar.widgets.generatorsupport import GeneratorSupport
+from tksugar.widgets.notebook import Notebook

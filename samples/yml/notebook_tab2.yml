@@ -1,0 +1,19 @@
+- _Listbox:
+    height: 8
+    ::id: list
+    pack: { anchor: center, expand: 1}
+- _Spinbox:
+    values: [2, 4, 6, 8, 10, 12]
+    pack: { anchor: center, expand: 1}
+- _Scale:
+    from: 1
+    to: 100
+    label: Scale
+    orient: horizontal
+    pack: { anchor: center, expand: 1}
+- _Canvas:
+    bg: white
+    width: 100
+    height: 50
+    ::id: canvas
+    pack: { anchor: center, expand: 1}
