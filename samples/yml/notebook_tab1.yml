@@ -1,0 +1,27 @@
+- _LabelFrame:
+    text: This is Label Frame
+    pack: { ipadx: 8, ipady: 8, anchor: center, expand: 1 }
+    _Label:
+      text: Label in Label Frame
+      pack:
+- _Button:
+    text: This is Button
+    pack: { anchor: center, expand: 1}
+- _Frame:
+    pack: { anchor: center, expand: 1}
+    ::children:
+      - _Label:
+          text: Entry>>>
+          pack: { side: left }
+      - _Entry:
+          pack:
+- _Checkbutton:
+    text: Checkbutton
+    pack: { anchor: center, expand: 1}
+- _LabelFrame:
+    text: Radiobutton
+    pack: { anchor: center, expand: 1}
+    ::children:
+      - _Radiobutton: {text: A, pack: }
+      - _Radiobutton: {text: B, pack: }
+      - _Radiobutton: {text: C, pack: }

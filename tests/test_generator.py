@@ -4,10 +4,18 @@ import yaml
 
 from tksugar.generator import Generator
 
+class Button(tkinter.Button):
+  """
+  We override the Button class for testing.
+  """
+  pass
+
 class Test_Generator_Methods(unittest.TestCase):
   """
   Tests the `Generator#generate()` method.
   """
+
+  #region Test of normal operation.
 
   def test_plane(self):
     """
@@ -72,6 +80,21 @@ class Test_Generator_Methods(unittest.TestCase):
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
 
+  def test_widget_override(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Multiple modules are referenced.
+    * Overriding an existing tkinter widget in the referenced module.
+    """
+    gen = Generator(file="tests/definition/button.yml", modules=["tests.test_generator", "tkinter"])
+    tk = gen.generate()
+    self.assertEquals(tk.children["!frame"].children["!button"].__class__.__module__, "tests.test_generator")
+
+  #endregion
+
+  #region Test of semi-normal operation
+
   def test_include_multidir(self):
     """
     Confirm that the target Tk window is created when the `Generator#generate()` method
@@ -83,6 +106,10 @@ class Test_Generator_Methods(unittest.TestCase):
     gen = Generator("tests/definition/testdir/multiple_files.yml")
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
+
+  #endregion
+
+  #region Abnormal behavior test
 
   def test_variable_toplevel_window(self):
     """
@@ -123,6 +150,8 @@ class Test_Generator_Methods(unittest.TestCase):
     gen = Generator("tests/definition/variable_error4.yml")
     with self.assertRaises(AttributeError):
       gen.generate()
+
+  #endregion
 
 if __name__ == "__main__":
   unittest.main()
