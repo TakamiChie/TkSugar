@@ -10,7 +10,7 @@ class Button(tkinter.Button):
   """
   pass
 
-class Test_Generator_Methods(unittest.TestCase):
+class Test_Generator(unittest.TestCase):
   """
   Tests the `Generator#generate()` method.
   """
