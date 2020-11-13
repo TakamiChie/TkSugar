@@ -6,3 +6,4 @@ Therefore, even if there is a widget with the same name in another module, this 
 """
 from tksugar.widgets.generatorsupport import GeneratorSupport
 from tksugar.widgets.notebook import Notebook
+from tksugar.widgets.menu import Menu

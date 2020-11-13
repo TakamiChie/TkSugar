@@ -1,0 +1,23 @@
+_Tk:
+  title: Menu
+  ::children:
+    - _Menu:
+        ::children:
+          - _Menu:
+              tearoff: 0
+              /label: File
+              items:
+                - Open
+                - Save
+                - SaveAs
+                - Print
+          - _Menu:
+              tearoff: 0
+              /label: Edit
+              items:
+                - {label: Undo, accelerator: "Ctrl+Z"}
+                - {label: Undo, accelerator: "Ctrl+Shift+Z"}
+                - ---
+                - {label: Cut, accelerator: "Ctrl+X"}
+                - {label: Copy, accelerator: "Ctrl+C"}
+                - {label: Paste, accelerator: "Ctrl+V"}
