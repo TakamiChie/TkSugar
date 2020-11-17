@@ -10,6 +10,7 @@ from yamlinclude import YamlIncludeConstructor
 
 from tksugar.tkmanager import TkManager
 from tksugar.widgets.generatorsupport import GeneratorSupport
+from tksugar.eventreciever import EventReciever
 
 class TagData(object):
   """
@@ -208,15 +209,6 @@ class GridRowCommand(CommandBaseClass):
     self.postactions.append(_command)
 
 #endregion
-
-class EventReciever(object):
-  def __init__(self, object, tag, callback):
-    self.object = object
-    self.tag = tag
-    self.callback = callback
-
-  def __call__(self, event=None):
-    self.callback(self.object, self.tag)
 
 class Generator(object):
   """
