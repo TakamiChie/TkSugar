@@ -146,16 +146,6 @@ class Test_Generator(unittest.TestCase):
 
   #region Abnormal behavior test
 
-  def test_variable_toplevel_window(self):
-    """
-    Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
-    * Specify one Tk window in the file.
-    * Widget variables are set in the top level window.
-    """
-    gen = Generator("tests/definition/variable_error.yml")
-    with self.assertRaises(ValueError):
-      gen.generate()
-
   def test_variable_noname(self):
     """
     Confirm that ValueError occurs when calling the `Generator#generate()` method under the following conditions.
