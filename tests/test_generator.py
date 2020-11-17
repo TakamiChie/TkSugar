@@ -8,7 +8,31 @@ class Button(tkinter.Button):
   """
   We override the Button class for testing.
   """
-  pass
+  def __init__(self, master=None, cnf={}, **kw):
+    """Construct a button widget with the parent MASTER.
+
+    STANDARD OPTIONS
+
+        activebackground, activeforeground, anchor,
+        background, bitmap, borderwidth, cursor,
+        disabledforeground, font, foreground
+        highlightbackground, highlightcolor,
+        highlightthickness, image, justify,
+        padx, pady, relief, repeatdelay,
+        repeatinterval, takefocus, text,
+        textvariable, underline, wraplength
+
+    WIDGET-SPECIFIC OPTIONS
+
+        command, compound, default, height,
+        overrelief, state, width
+    """
+    tkinter.Button.__init__(self, **kw)
+    self.items = []
+    self.testdict = {}
+
+  def items(self, items):
+    self.items.append(items)
 
 class Test_Generator(unittest.TestCase):
   """
@@ -69,6 +93,17 @@ class Test_Generator(unittest.TestCase):
     self.assertIsNotNone(type(gen.findbyid("test3").widget["textvariable"]))
     self.assertIsNotNone(type(gen.findbyid("test4").widget["textvariable"]))
     self.assertIs(type(gen.vars["test1"]), tkinter.StringVar)
+
+  def test_variable_in_array(self):
+    """
+    When the `Generator#generate()` method is called with the following conditions
+    Make sure that all variable objects set in the parameters are expanded.
+    * A var variable exists on a node other than the node directly under the widget.
+    """
+    gen = Generator(file="tests/definition/variable_in_array.yml", modules=["tests.test_generator", "tkinter"])
+    gen.generate()
+    self.assertIs(type(gen.findbyid("button1").widget.items[0]), tkinter.IntVar)
+    self.assertIs(type(gen.findbyid("button2").widget.testdict["testvar"]), tkinter.StringVar)
 
   def test_include(self):
     """

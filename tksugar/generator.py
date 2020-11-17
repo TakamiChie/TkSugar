@@ -571,13 +571,20 @@ class Generator(object):
     tagdata: TagData
       Widget additional data.
     """
+    def replace_variable(master, params):
+      """
+      Recursively replaces the TemporaryVariable class present in all parameters.
+      """
+      for n in params.keys() if type(params) is dict else range(len(params)):
+        if type(params[n]) is TemporaryVariable:
+          if not master is None:
+            params[n] = self.vars[params[n].name]
+          else:
+            raise ValueError("Widget variables cannot be included in top-level windows.")
+        elif type(params[n]) is list or type(params[n]) is dict:
+          replace_variable(master, params[n])
     # Prepare
-    for n in params:
-      if type(params[n]) is TemporaryVariable:
-        if "master" in params:
-          params[n] = self.vars[params[n].name]
-        else:
-          raise ValueError("Widget variables cannot be included in top-level windows.")
+    replace_variable(params.get("master", None), params)
     initparams, others = Generator._split_params(cls.__init__, params)
     postactions = []
     commands = {
