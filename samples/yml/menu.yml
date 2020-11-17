@@ -21,3 +21,11 @@ _Tk:
                 - {label: Cut, accelerator: "Ctrl+X"}
                 - {label: Copy, accelerator: "Ctrl+C"}
                 - {label: Paste, accelerator: "Ctrl+V"}
+          - _Menu:
+              tearoff: 0
+              /label: Checkbox
+              items:
+                - label: item1
+                  type: check
+                  variable: !!var:BooleanVar
+                    name: check1

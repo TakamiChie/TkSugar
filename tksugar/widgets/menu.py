@@ -45,7 +45,7 @@ class Menu(tkinter.Menu, GeneratorSupport):
       switch = {
         "separator": lambda a: self.add_separator(),
         "command": lambda a: self.add_command(a),
-        "check": lambda a: NotImplementedError(),
+        "check": lambda a: self.add_checkbutton(a),
         "radio": lambda a: NotImplementedError()
       }
       t = item.pop("type")

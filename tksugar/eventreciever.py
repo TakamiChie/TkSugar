@@ -4,5 +4,5 @@ class EventReciever(object):
     self.tag = tag
     self.callback = callback
 
-  def __call__(self, event=None):
+  def __call__(self, *args, **kw):
     self.callback(self.object, self.tag)
