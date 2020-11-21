@@ -37,3 +37,42 @@ _Tk:
                     - radio1
                     - radio2
                     - {label: radio3, value: 999}
+          - _Menu:
+              tearoff: 0
+              /label: Submenu
+              items:
+                - label: Owner
+                  type: cascade
+                  items:
+                    - {label: Run, accelerator: "F5"}
+                    - {label: Search, accelerator: "Ctrl+F"}
+                    - {label: Replace, accelerator: "Ctrl+R"}
+                    - label: Checkable
+                      type: check
+                      variable: !!var:BooleanVar
+                        name: check2
+                        default: True
+                - label: Radio
+                  type: cascade
+                  items:
+                    - type: radio
+                      variable: !!var:IntVar
+                        name: radio2
+                      items:
+                        - Option1
+                        - Option2
+                        - Option3
+                - label: Deep hierarchy 1F
+                  type: cascade
+                  items:
+                    - label: Deep hierarchy 2F
+                      type: cascade
+                      items:
+                        - label: Deep hierarchy 3F
+                          type: cascade
+                          accelerator: F4
+                          items:
+                            - label: Deep hierarchy 4F
+                              type: cascade
+                              items:
+                                - Deep hierarchy 5F

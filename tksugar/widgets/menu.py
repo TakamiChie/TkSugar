@@ -30,6 +30,12 @@ class Menu(tkinter.Menu, GeneratorSupport):
     items: list(str or dict)
       An array of menu items. Information defining a string or menu item.
     """
+    def cascade(a):
+      items = a.pop("items")
+      tearoff = a.pop("tearoff", False)
+      m = Menu(master=self, tearoff=tearoff)
+      m.items(items)
+      self.append_child(m, **a)
     for item in items:
       if type(item) is str:
         if item == "---":
@@ -48,7 +54,8 @@ class Menu(tkinter.Menu, GeneratorSupport):
         "check": lambda a: self.add_checkbutton(a),
         "radio": lambda a: [self.add_radiobutton(label= i["label"] if type(i) is dict else i,
             variable=a.get("variable", None),
-            value= i.get("value", n) if type(i) is dict else n) for n, i in enumerate(a["items"])]
+            value= i.get("value", n) if type(i) is dict else n) for n, i in enumerate(a["items"])],
+        "cascade": lambda a: cascade(a)
       }
       t = item.pop("type")
       v = switch.get(t, ValueError)(item)
