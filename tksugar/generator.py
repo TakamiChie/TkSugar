@@ -304,7 +304,7 @@ class Generator(object):
     if tag.hasdata(): self._widgets.append(tag)
     # Load Variable
     for n in self.vars.keys():
-      self.vars[n] = self.vars[n](master=root)
+      self.vars[n] = self.vars[n](master=root, name=n)
     # Load Child Object
     _generate_core(tree["children"], root, modules)
     return root
