@@ -29,3 +29,10 @@ _Tk:
                   type: check
                   variable: !!var:BooleanVar
                     name: check1
+                - type: radio
+                  variable: !!var:IntVar
+                    name: radio1
+                  items:
+                    - radio1
+                    - radio2
+                    - {label: radio3, value: 999}

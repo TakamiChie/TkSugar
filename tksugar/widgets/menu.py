@@ -46,7 +46,9 @@ class Menu(tkinter.Menu, GeneratorSupport):
         "separator": lambda a: self.add_separator(),
         "command": lambda a: self.add_command(a),
         "check": lambda a: self.add_checkbutton(a),
-        "radio": lambda a: NotImplementedError()
+        "radio": lambda a: [self.add_radiobutton(label= i["label"] if type(i) is dict else i,
+            variable=a.get("variable", None),
+            value= i.get("value", n) if type(i) is dict else n) for n, i in enumerate(a["items"])]
       }
       t = item.pop("type")
       v = switch.get(t, ValueError)(item)
