@@ -5,7 +5,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 from tksugar import Generator
 
 def menuitem(button, tag):
-  pass
+  if tag.id == "Menu":
+    print(f"Menuitem Clicked!")
 
 def changevar(obj, name):
   print(f"{name} changed! {obj.get()}")

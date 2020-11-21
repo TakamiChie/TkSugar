@@ -2,6 +2,8 @@ _Tk:
   title: Menu
   ::children:
     - _Menu:
+        ::command:
+        ::id: Menu
         ::children:
           - _Menu:
               tearoff: 0

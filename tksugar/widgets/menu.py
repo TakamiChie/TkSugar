@@ -1,6 +1,7 @@
 import tkinter
 
 from tksugar.widgets.generatorsupport import GeneratorSupport
+from tksugar.eventreciever import EventReciever
 
 class Menu(tkinter.Menu, GeneratorSupport):
   """
@@ -14,11 +15,14 @@ class Menu(tkinter.Menu, GeneratorSupport):
     disabledforeground, fg, font, foreground, postcommand, relief,
     selectcolor, takefocus, tearoff, tearoffcommand, title, type."""
     super().__init__(master=None, cnf=cnf, **kw)
+    self._command = None
+    self._parent = None
     if issubclass(type(master), tkinter.Wm):
       master.config(menu=self)
 
   def append_child(self, child, **params):
     params["menu"] = child
+    child._parent = self
     self.add_cascade(params)
 
   def items(self, items):
@@ -48,6 +52,7 @@ class Menu(tkinter.Menu, GeneratorSupport):
             "label": item
           }
       item.setdefault("type", "command")
+      if not "command" in item: item["command"] = EventReciever(self, "", self._callback)
       switch = {
         "separator": lambda a: self.add_separator(),
         "command": lambda a: self.add_command(a),
@@ -61,3 +66,35 @@ class Menu(tkinter.Menu, GeneratorSupport):
       v = switch.get(t, ValueError)(item)
       if issubclass(type(v), Exception):
         raise v
+
+  def _callback(self, o, n):
+    """
+    Callbacks for various menus.
+    """
+    if not self.command is None:
+      self.command()
+    elif not self.parent is None:
+      self.parent._callback(o, o)
+    else:
+      raise NotImplementedError() # This is not executed.
+
+  @property
+  def parent(self):
+    """
+    Gets parent.
+    """
+    return self._parent
+
+  @property
+  def command(self):
+    """
+    Gets or sets an event handler that will be executed when the button is pressed.
+    """
+    return self._command
+
+  @command.setter
+  def command(self, value):
+    """
+    Gets or sets an event handler that will be executed when the button is pressed.
+    """
+    self._command = value
