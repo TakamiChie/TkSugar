@@ -75,12 +75,14 @@ class GeneratorLoader(yaml.SafeLoader):
     """
     if suffix[0] == ":": suffix = suffix[1:]
     name = ""
+    default = None
     for v in node.value:
       if v[0].value == "name": name = v[1].value
+      if v[0].value == "default": default = v[1].value
     if name != "":
       var = getattr(tkinter, suffix)
       if not issubclass(var, tkinter.Variable): raise ValueError("The specified class is not a Variable class.")
-      loader.vars[name] = var
+      loader.vars[name] = {"class": var, "default": default}
       return TemporaryVariable(name)
     else:
       raise ValueError("The variable name is not set.")
@@ -303,8 +305,10 @@ class Generator(object):
     root, tag = self._instantiate(cls, callback=command, **tree["params"])
     if tag.hasdata(): self._widgets.append(tag)
     # Load Variable
-    for n in self.vars.keys():
-      self.vars[n] = self.vars[n](master=root, name=n)
+    for n, v in self.vars.items():
+      self.vars[n] = v["class"](master=root, name=n)
+      if not v["default"] is None:
+        self.vars[n].set(v["default"])
     # Load Child Object
     _generate_core(tree["children"], root, modules)
     return root

@@ -29,6 +29,7 @@ _Tk:
                   type: check
                   variable: !!var:BooleanVar
                     name: check1
+                    default: True
                 - type: radio
                   variable: !!var:IntVar
                     name: radio1
