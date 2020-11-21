@@ -76,3 +76,19 @@ _Tk:
                               type: cascade
                               items:
                                 - Deep hierarchy 5F
+          - _Menu:
+              tearoff: 1
+              /label: Separation possible
+              items:
+                - Open
+                - Save
+                - SaveAs
+                - Print
+                - label: Separatable
+                  type: cascade
+                  tearoff: 1
+                  items:
+                    - Open
+                    - Save
+                    - SaveAs
+                    - Print
