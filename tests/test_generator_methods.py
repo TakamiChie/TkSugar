@@ -215,7 +215,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * Specify one Tk window in the file.
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/plane.yml", "r") as f:
+    with open("tests/definition/generator_test/plane.yml", "r") as f:
       struct = yaml.safe_load(f)
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
@@ -231,7 +231,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * There is a widget in the window.
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/button.yml", "r") as f:
+    with open("tests/definition/generator_test/button.yml", "r") as f:
       struct = yaml.safe_load(f)
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
@@ -250,7 +250,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * `::children` element exists.
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/children.yml", "r") as f:
+    with open("tests/definition/generator_test/children.yml", "r") as f:
       struct = yaml.safe_load(f)
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
@@ -268,7 +268,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * The child element of the `::children` element is not a list(dict).
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/children_error.yml", "r") as f:
+    with open("tests/definition/generator_test/children_error.yml", "r") as f:
       struct = yaml.safe_load(f)
       with self.assertRaises(AttributeError):
         gen._scantree(struct)
@@ -283,7 +283,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * The `::params` element exists inside the `::children` element.
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/params1.yml", "r") as f:
+    with open("tests/definition/generator_test/params1.yml", "r") as f:
       struct = yaml.safe_load(f)
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
@@ -301,7 +301,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * The `::params` element exists outside the `::children` element.
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/params2.yml", "r") as f:
+    with open("tests/definition/generator_test/params2.yml", "r") as f:
       struct = yaml.safe_load(f)
       tree = gen._scantree(struct)
       self.assertEqual(tree["classname"], "Tk")
@@ -318,7 +318,7 @@ class Test_Generator_Methods(unittest.TestCase):
     * ID and tag elements are defined in windows and widgets.
     """
     gen = Generator(modules=["tkinter"])
-    with open("tests/definition/idtags.yml", "r") as f:
+    with open("tests/definition/generator_test/idtags.yml", "r") as f:
       struct = yaml.safe_load(f)
       tree = gen._scantree(struct)
       self.assertEqual(tree["params"]["::id"], "test")

@@ -50,7 +50,7 @@ class Test_Generator(unittest.TestCase):
     is called under the following conditions.
     * Specify one Tk window in the file.
     """
-    gen = Generator("tests/definition/plane.yml")
+    gen = Generator("tests/definition/generator_test/plane.yml")
     tk = gen.generate()
     self.assertEquals(type(tk), tkinter.Tk)
     self.assertEquals(tk.title(), "TEST Window")
@@ -62,7 +62,7 @@ class Test_Generator(unittest.TestCase):
     * Specify one Tk window in the file.
     * There is a widget in the window.
     """
-    gen = Generator("tests/definition/button.yml")
+    gen = Generator("tests/definition/generator_test/button.yml")
     tk = gen.generate()
     self.assertEquals(type(tk.children["!frame"]), tkinter.Frame)
     self.assertEquals(type(tk.children["!frame"].children["!button"]), tkinter.Button)
@@ -75,7 +75,7 @@ class Test_Generator(unittest.TestCase):
     * There is a widget in the window.
     * ID and tag elements are defined in windows and widgets.
     """
-    gen = Generator("tests/definition/idtags.yml")
+    gen = Generator("tests/definition/generator_test/idtags.yml")
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("test").widget), tkinter.Tk)
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
@@ -89,7 +89,7 @@ class Test_Generator(unittest.TestCase):
     * There is a widget in the window.
     * Widget variables are set in the widget.
     """
-    gen = Generator("tests/definition/variable.yml")
+    gen = Generator("tests/definition/generator_test/variable.yml")
     tk = gen.generate()
     self.assertIsNotNone(type(gen.findbyid("test1").widget["textvariable"]))
     self.assertIsNotNone(type(gen.findbyid("test2").widget["textvariable"]))
@@ -103,7 +103,7 @@ class Test_Generator(unittest.TestCase):
     Make sure that all variable objects set in the parameters are expanded.
     * A var variable exists on a node other than the node directly under the widget.
     """
-    gen = Generator(file="tests/definition/variable_in_array.yml", modules=["tests.test_generator", "tkinter"])
+    gen = Generator(file="tests/definition/generator_test/variable_in_array.yml", modules=["tests.test_generator", "tkinter"])
     gen.generate()
     self.assertIs(type(gen.findbyid("button1").widget.items[0]), tkinter.IntVar)
     self.assertIs(type(gen.findbyid("button2").widget.testdict["testvar"]), tkinter.StringVar)
@@ -114,7 +114,7 @@ class Test_Generator(unittest.TestCase):
     is called under the following conditions.
     * Include another YAML file within a YAML file.
     """
-    gen = Generator("tests/definition/multiple_files.yml")
+    gen = Generator("tests/definition/generator_test/multiple_files.yml")
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
 
@@ -125,7 +125,7 @@ class Test_Generator(unittest.TestCase):
     * Multiple modules are referenced.
     * Overriding an existing tkinter widget in the referenced module.
     """
-    gen = Generator(file="tests/definition/button.yml", modules=["tests.test_generator", "tkinter"])
+    gen = Generator(file="tests/definition/generator_test/button.yml", modules=["tests.test_generator", "tkinter"])
     tk = gen.generate()
     self.assertEquals(gen.findbyid("test").widget.__class__.__module__, "tests.test_generator")
 
@@ -140,8 +140,8 @@ class Test_Generator(unittest.TestCase):
     * Include another YAML file within a YAML file.
     * The file path of the YAML file read the first time and the YAML file read the second time are different.
     """
-    Generator("tests/definition/multiple_files.yml")
-    gen = Generator("tests/definition/testdir/multiple_files.yml")
+    Generator("tests/definition/generator_test/multiple_files.yml")
+    gen = Generator("tests/definition/generator_test/testdir/multiple_files.yml")
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
 
@@ -152,7 +152,7 @@ class Test_Generator(unittest.TestCase):
     * There is a widget in the YAML file that contains the `::command` keyword
     * Argument command of `Generator#generate()` is not specified
     """
-    gen = Generator("tests/definition/has_command.yml")
+    gen = Generator("tests/definition/generator_test/has_command.yml")
     tk = gen.generate()
     self.assertTrue(True)
 
@@ -166,7 +166,7 @@ class Test_Generator(unittest.TestCase):
     * Specify one Tk window in the file.
     * The widget variable does not contain a name.
     """
-    gen = Generator("tests/definition/variable_error2.yml")
+    gen = Generator("tests/definition/generator_test/variable_error2.yml")
     with self.assertRaises(ValueError):
       gen.generate()
 
@@ -176,7 +176,7 @@ class Test_Generator(unittest.TestCase):
     * Specify one Tk window in the file.
     * Specify the class name of a class that is not a subclass of Variable as the widget variable type.
     """
-    gen = Generator("tests/definition/variable_error3.yml")
+    gen = Generator("tests/definition/generator_test/variable_error3.yml")
     with self.assertRaises(ValueError):
       gen.generate()
 
@@ -186,7 +186,7 @@ class Test_Generator(unittest.TestCase):
     * Specify one Tk window in the file.
     * The widget variable type is a non-existent class name.
     """
-    gen = Generator("tests/definition/variable_error4.yml")
+    gen = Generator("tests/definition/generator_test/variable_error4.yml")
     with self.assertRaises(AttributeError):
       gen.generate()
 
@@ -196,7 +196,7 @@ class Test_Generator(unittest.TestCase):
     * Specify one Tk window in the file.
     * Keyword is a non-existent name.
     """
-    gen = Generator("tests/definition/command_unknown.yml")
+    gen = Generator("tests/definition/generator_test/command_unknown.yml")
     with self.assertRaises(NameError):
       gen.generate()
 

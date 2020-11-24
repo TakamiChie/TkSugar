@@ -34,7 +34,7 @@ class Test_GeneratorSupport(unittest.TestCase):
     Make sure that the child object calls the `GeneratorSupport#append_child()` of the owner object.
     * The owner object implements `GeneratorSupport#append_child()`.
     """
-    obj = Generator(file="tests/definition/support_haschild.yml", modules=["tests.test_generatorsupport"]).generate()
+    obj = Generator(file="tests/definition/generator_test/support_haschild.yml", modules=["tests.test_generatorsupport"]).generate()
     self.assertEqual(obj.__class__.__name__, "TestOwner")
     self.assertEqual(obj.children[0]["obj"].__class__.__name__, "TestChildObject")
     self.assertEqual(obj.children[0]["obj"].a, 1)
