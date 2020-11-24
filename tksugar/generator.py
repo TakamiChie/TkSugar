@@ -10,6 +10,7 @@ from yamlinclude import YamlIncludeConstructor
 
 from tksugar.tkmanager import TkManager
 from tksugar.widgets.generatorsupport import GeneratorSupport
+from tksugar.eventreciever import EventReciever
 
 class TagData(object):
   """
@@ -74,12 +75,14 @@ class GeneratorLoader(yaml.SafeLoader):
     """
     if suffix[0] == ":": suffix = suffix[1:]
     name = ""
+    default = None
     for v in node.value:
       if v[0].value == "name": name = v[1].value
+      if v[0].value == "default": default = v[1].value
     if name != "":
       var = getattr(tkinter, suffix)
       if not issubclass(var, tkinter.Variable): raise ValueError("The specified class is not a Variable class.")
-      loader.vars[name] = var
+      loader.vars[name] = {"class": var, "default": default}
       return TemporaryVariable(name)
     else:
       raise ValueError("The variable name is not set.")
@@ -209,15 +212,6 @@ class GridRowCommand(CommandBaseClass):
 
 #endregion
 
-class EventReciever(object):
-  def __init__(self, object, tag, callback):
-    self.object = object
-    self.tag = tag
-    self.callback = callback
-
-  def __call__(self, event=None):
-    self.callback(self.object, self.tag)
-
 class Generator(object):
   """
   The core object that creates the Tk window.
@@ -311,8 +305,10 @@ class Generator(object):
     root, tag = self._instantiate(cls, callback=command, **tree["params"])
     if tag.hasdata(): self._widgets.append(tag)
     # Load Variable
-    for n in self.vars.keys():
-      self.vars[n] = self.vars[n](master=root)
+    for n, v in self.vars.items():
+      self.vars[n] = v["class"](master=root, name=n)
+      if not v["default"] is None:
+        self.vars[n].set(v["default"])
     # Load Child Object
     _generate_core(tree["children"], root, modules)
     return root
@@ -571,13 +567,17 @@ class Generator(object):
     tagdata: TagData
       Widget additional data.
     """
-    # Prepare
-    for n in params:
-      if type(params[n]) is TemporaryVariable:
-        if "master" in params:
+    def replace_variable(params):
+      """
+      Recursively replaces the TemporaryVariable class present in all parameters.
+      """
+      for n in params.keys() if type(params) is dict else range(len(params)):
+        if type(params[n]) is TemporaryVariable:
           params[n] = self.vars[params[n].name]
-        else:
-          raise ValueError("Widget variables cannot be included in top-level windows.")
+        elif type(params[n]) is list or type(params[n]) is dict:
+          replace_variable(params[n])
+    # Prepare
+    replace_variable(params)
     initparams, others = Generator._split_params(cls.__init__, params)
     postactions = []
     commands = {

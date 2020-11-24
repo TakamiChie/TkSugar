@@ -1,0 +1,19 @@
+_Tk:
+  title: Multiwindow(Owner)
+  geometry: 300x200
+  ::children:
+    - _Button:
+        ::id: button1
+        text: "Press Me!"
+        pack:
+            anchor: center
+            expand: 1
+        items:
+          - !!var:IntVar
+              name: check
+          - None
+    - _Button:
+        ::id: button2
+        testdict:
+          testvar: !!var:StringVar
+            name: test

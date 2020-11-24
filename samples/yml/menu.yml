@@ -1,0 +1,97 @@
+_Tk:
+  title: Menu
+  ::children:
+    - _Menu:
+        ::command:
+        ::id: Menu
+        ::children:
+          - _Menu:
+              tearoff: 0
+              /label: File
+              items:
+                - Open
+                - Save
+                - SaveAs
+                - Print
+          - _Menu:
+              tearoff: 0
+              /label: Edit
+              items:
+                - {label: Undo, accelerator: "Ctrl+Z"}
+                - {label: Undo, accelerator: "Ctrl+Shift+Z"}
+                - ---
+                - {label: Cut, accelerator: "Ctrl+X"}
+                - {label: Copy, accelerator: "Ctrl+C"}
+                - {label: Paste, accelerator: "Ctrl+V"}
+          - _Menu:
+              tearoff: 0
+              /label: Checkbox
+              items:
+                - label: item1
+                  type: check
+                  variable: !!var:BooleanVar
+                    name: check1
+                    default: True
+                - type: radio
+                  name: radioitem
+                  variable: !!var:IntVar
+                    name: radio1
+                  items:
+                    - radio1
+                    - radio2
+                    - {label: radio3, value: 999}
+          - _Menu:
+              tearoff: 0
+              /label: Submenu
+              items:
+                - label: Owner
+                  type: cascade
+                  items:
+                    - {label: Run, accelerator: "F5"}
+                    - {label: Search, accelerator: "Ctrl+F"}
+                    - {label: Replace, accelerator: "Ctrl+R"}
+                    - label: Checkable
+                      type: check
+                      variable: !!var:BooleanVar
+                        name: check2
+                        default: True
+                - label: Radio
+                  type: cascade
+                  items:
+                    - type: radio
+                      variable: !!var:IntVar
+                        name: radio2
+                      items:
+                        - Option1
+                        - Option2
+                        - Option3
+                - label: Deep hierarchy 1F
+                  type: cascade
+                  items:
+                    - label: Deep hierarchy 2F
+                      type: cascade
+                      items:
+                        - label: Deep hierarchy 3F
+                          type: cascade
+                          accelerator: F4
+                          items:
+                            - label: Deep hierarchy 4F
+                              type: cascade
+                              items:
+                                - Deep hierarchy 5F
+          - _Menu:
+              tearoff: 1
+              /label: Separation possible
+              items:
+                - Open
+                - Save
+                - SaveAs
+                - Print
+                - label: Separatable
+                  type: cascade
+                  tearoff: 1
+                  items:
+                    - {label: Open, name: Open sub}
+                    - {label: Save, name: Save sub}
+                    - {label: SaveAs, name: SaveAs sub}
+                    - {label: Print, name: Print sub}
