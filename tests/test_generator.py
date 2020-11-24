@@ -145,6 +145,17 @@ class Test_Generator(unittest.TestCase):
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
 
+  def test_command_no_handler(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * There is a widget in the YAML file that contains the `::command` keyword
+    * Argument command of `Generator#generate()` is not specified
+    """
+    gen = Generator("tests/definition/has_command.yml")
+    tk = gen.generate()
+    self.assertTrue(True)
+
   #endregion
 
   #region Abnormal behavior test
@@ -177,6 +188,16 @@ class Test_Generator(unittest.TestCase):
     """
     gen = Generator("tests/definition/variable_error4.yml")
     with self.assertRaises(AttributeError):
+      gen.generate()
+
+  def test_unkown_keyword(self):
+    """
+    Confirm that NameError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Specify one Tk window in the file.
+    * Keyword is a non-existent name.
+    """
+    gen = Generator("tests/definition/command_unknown.yml")
+    with self.assertRaises(NameError):
       gen.generate()
 
   #endregion

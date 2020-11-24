@@ -154,11 +154,12 @@ class CommandCommand(CommandBaseClass):
 
   def command(self, object, tag, value):
     try:
-      resv = EventReciever(object, tag, self.callback)
-      if "command" in dir(object):
-        setattr(object, "command", resv)
-      else:
-        object["command"] = resv
+      if not self.callback is None:
+        resv = EventReciever(object, tag, self.callback)
+        if "command" in dir(object):
+          setattr(object, "command", resv)
+        else:
+          object["command"] = resv
     except tkinter.TclError:
       pass
 
@@ -586,7 +587,7 @@ class Generator(object):
       "gridcolumn": GridColumnCommand(postactions),
       "gridrow": GridRowCommand(postactions),
     }
-    if callback is not None: commands["command"] = CommandCommand(postactions, callback)
+    commands["command"] = CommandCommand(postactions, callback)
     # Instantiation
     obj = cls(**initparams)
     tagdata = TagData(obj)
@@ -595,7 +596,10 @@ class Generator(object):
     # Other property settings
     for n, v in others.items():
       if n.startswith("::"):
-        commands[n[2:]](obj, tagdata, v)
+        if n[2:] in commands:
+          commands[n[2:]](obj, tagdata, v)
+        else:
+          raise NameError("Command Not Found('{0}')".format(n[2:]))
       elif n.startswith("/"):
         pass
       elif inspect.isroutine(getattr(obj, n)):
