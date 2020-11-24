@@ -5,3 +5,4 @@ _Tk:
     _Button:
       text: "OK"
       anchor: "s"
+      ::id: test

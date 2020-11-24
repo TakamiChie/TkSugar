@@ -124,7 +124,7 @@ class Test_Generator(unittest.TestCase):
     """
     gen = Generator(file="tests/definition/button.yml", modules=["tests.test_generator", "tkinter"])
     tk = gen.generate()
-    self.assertEquals(tk.children["!frame"].children["!button"].__class__.__module__, "tests.test_generator")
+    self.assertEquals(gen.findbyid("test").widget.__class__.__module__, "tests.test_generator")
 
   #endregion
 
