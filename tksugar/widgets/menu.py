@@ -83,8 +83,6 @@ class Menu(tkinter.Menu, GeneratorSupport):
       self.command()
     elif not self.parent is None:
       self.parent._callback(o, n)
-    else:
-      raise NotImplementedError() # This is not executed.
 
   @property
   def parent(self):
