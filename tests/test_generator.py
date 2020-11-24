@@ -39,6 +39,9 @@ class Test_Generator(unittest.TestCase):
   Tests the `Generator#generate()` method.
   """
 
+  def tearDown(self):
+    tkinter._default_root = None
+
   #region Test of normal operation.
 
   def test_plane(self):
