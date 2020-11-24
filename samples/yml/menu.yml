@@ -90,7 +90,7 @@ _Tk:
                   type: cascade
                   tearoff: 1
                   items:
-                    - Open
-                    - Save
-                    - SaveAs
-                    - Print
+                    - {label: Open, name: Open sub}
+                    - {label: Save, name: Save sub}
+                    - {label: SaveAs, name: SaveAs sub}
+                    - {label: Print, name: Print sub}

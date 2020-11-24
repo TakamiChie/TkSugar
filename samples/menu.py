@@ -6,7 +6,7 @@ from tksugar import Generator
 
 def menuitem(button, tag):
   if tag.id == "Menu":
-    print(f"Menuitem Clicked!")
+    print("Menuitem '{0}' Clicked!".format(tag.tag["item"]))
 
 def changevar(obj, name):
   print(f"{name} changed! {obj.get()}")

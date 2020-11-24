@@ -52,7 +52,8 @@ class Menu(tkinter.Menu, GeneratorSupport):
             "label": item
           }
       item.setdefault("type", "command")
-      if not "command" in item: item["command"] = EventReciever(self, "", self._callback)
+      if "label" in item: item["command"] = EventReciever(self, item["name"] if "name" in item else item["label"], self._callback)
+      if "name" in item: item.pop("name")
       switch = {
         "separator": lambda a: self.add_separator(),
         "command": lambda a: self.add_command(a),
@@ -72,9 +73,10 @@ class Menu(tkinter.Menu, GeneratorSupport):
     Callbacks for various menus.
     """
     if not self.command is None:
+      self.command.tag.tag["item"] = n
       self.command()
     elif not self.parent is None:
-      self.parent._callback(o, o)
+      self.parent._callback(o, n)
     else:
       raise NotImplementedError() # This is not executed.
 
