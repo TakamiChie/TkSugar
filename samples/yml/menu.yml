@@ -33,6 +33,7 @@ _Tk:
                     name: check1
                     default: True
                 - type: radio
+                  name: radioitem
                   variable: !!var:IntVar
                     name: radio1
                   items:

@@ -34,6 +34,13 @@ class Menu(tkinter.Menu, GeneratorSupport):
     items: list(str or dict)
       An array of menu items. Information defining a string or menu item.
     """
+    def radio(a):
+      for n, i in enumerate(a["items"]):
+        self.add_radiobutton(
+          label= i["label"] if type(i) is dict else i,
+          variable=a.get("variable", None),
+          value= i.get("value", n) if type(i) is dict else n,
+          command= a.get("command", None))
     def cascade(a):
       items = a.pop("items")
       tearoff = a.pop("tearoff", False)
@@ -52,15 +59,14 @@ class Menu(tkinter.Menu, GeneratorSupport):
             "label": item
           }
       item.setdefault("type", "command")
-      if "label" in item: item["command"] = EventReciever(self, item["name"] if "name" in item else item["label"], self._callback)
+      if "name" in item and not "command" in item: item["command"] = EventReciever(self, item["name"], self._callback)
+      if "label" in item and not "command" in item: item["command"] = EventReciever(self, item["label"], self._callback)
       if "name" in item: item.pop("name")
       switch = {
         "separator": lambda a: self.add_separator(),
         "command": lambda a: self.add_command(a),
         "check": lambda a: self.add_checkbutton(a),
-        "radio": lambda a: [self.add_radiobutton(label= i["label"] if type(i) is dict else i,
-            variable=a.get("variable", None),
-            value= i.get("value", n) if type(i) is dict else n) for n, i in enumerate(a["items"])],
+        "radio": lambda a: radio(a),
         "cascade": lambda a: cascade(a)
       }
       t = item.pop("type")
