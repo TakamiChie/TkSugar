@@ -1,4 +1,5 @@
 import locale
+import re
 
 from yaml.loader import SafeLoader
 
@@ -59,9 +60,14 @@ class Localizer(object):
       Data list.
     """
     def translate_core(data):
-      for k in data.keys():
+      for k in data.keys() if type(data) is dict else range(len(data)):
         if type(data[k]) is dict:
           translate_core(data[k])
+        elif type(data[k]) is list:
+          translate_core(data[k])
+        elif type(data[k]) is str:
+          data[k] = rexp.sub(lambda m: self._translate(m.group(0)[3:]), data[k])
+    rexp = re.compile(r":::\S+")
     self._prepare()
     translate_core(data)
 
