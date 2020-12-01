@@ -25,5 +25,20 @@ class Test_Localizer(unittest.TestCase):
 
   #endregion
 
+  #region Anomaly Testing
+
+  def test_haslist(self):
+    """
+    Make sure ValueError is raised when `Localizer#_prepare()` is executed under the following conditions.
+    * YML file exists.
+    * YML file contains list information.
+    """
+    l = Localizer("tests/definition/localizer_test/haslist.yml")
+    with self.assertRaises(ValueError) as cm:
+      l._prepare()
+      self.assertEqual(str(cm.exception), "The list can not be included.")
+
+  #endregion
+
 if __name__ == "__main__":
   unittest.main()

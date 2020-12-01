@@ -34,6 +34,8 @@ class Localizer(object):
       for k in struct.keys():
         if type(struct[k]) is dict:
           result.update(flatten_dict(f"{basename}{k}.", struct[k]))
+        elif type(struct[k]) is list:
+          raise ValueError("The list can not be included.")
         else:
           result[f"{basename}{k}"] = struct[k]
       return result
