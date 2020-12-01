@@ -48,7 +48,7 @@ class Localizer(object):
         loader.dispose()
       self._translatedict = flatten_dict("", data)
 
-  def translate(self, data):
+  def localize(self, data):
     """
     Translate the given data.
     This method modifies the given data directly.
