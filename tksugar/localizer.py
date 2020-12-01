@@ -79,5 +79,6 @@ class Localizer(object):
     ----
     return: str
       The string after replacement.
+      If the keywords were not present in the dictionary, the string is returned as is without replacement.
     """
-    return self._translatedict[name]
+    return self._translatedict[name] if name in self._translatedict else name
