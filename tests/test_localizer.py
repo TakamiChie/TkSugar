@@ -7,6 +7,8 @@ class Test_Localizer(unittest.TestCase):
   Tests the `Localizer` Class
   """
 
+  #region Testing for normal operation
+
   def test_prepare(self):
     """
     Confirm that the translation data can be read correctly when `Localizer#_prepare()` is executed under the following conditions.
@@ -20,6 +22,8 @@ class Test_Localizer(unittest.TestCase):
     self.assertEqual(l._translatedict["test.testb"], "b")
     self.assertEqual(l._translatedict["test.testc"], "c")
     self.assertEqual(l._translatedict["test.test.testd"], "d")
+
+  #endregion
 
 if __name__ == "__main__":
   unittest.main()
