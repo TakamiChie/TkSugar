@@ -62,8 +62,7 @@ class Localizer(object):
       for k in data.keys():
         if type(data[k]) is dict:
           translate_core(data[k])
-        elif type(data[k]) is str and data[k].startswith(":::"):
-          data[k] = self._translate(data[k][3:])
+    self._prepare()
     translate_core(data)
 
   def _translate(self, name):
