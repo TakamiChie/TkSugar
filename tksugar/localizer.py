@@ -1,4 +1,3 @@
-import locale
 import re
 
 from yaml.loader import SafeLoader
