@@ -1,5 +1,7 @@
 import unittest
 
+import yaml
+
 from tksugar.localizer import Localizer
 
 class Test_Localizer(unittest.TestCase):
@@ -34,6 +36,22 @@ class Test_Localizer(unittest.TestCase):
     l._prepare()
     self.assertEqual(l._translate("testa"), "a")
     self.assertEqual(l._translate("test.testb"), "b")
+
+  def test_localize(self):
+    """
+    If you run `Localizer#localize()` under the following conditions,
+    Make sure that all keywords among the given data are replaced.
+    * YML file exists.
+    * A mixture of keywords in the dictionary and those not in the dictionary.
+    """
+    l = Localizer("tests/definition/localizer_test/safecase.yml")
+    with open("tests/definition/localizer_test/target.yml") as f:
+      data = yaml.safe_load(f)
+    l.localize(data)
+    self.assertEqual(data["targets"], "a")
+    self.assertEqual(data["non_targets"], "no translate")
+    self.assertEqual(data["listitems"], ["b", "c", "test.unknown"])
+    self.assertEqual(data["longtext"], "test\nd\na")
 
   #endregion
 

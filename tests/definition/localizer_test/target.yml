@@ -1,0 +1,10 @@
+targets: :::testa
+non_targets: no translate
+listitems:
+  - :::test.testb
+  - :::test.testc
+  - :::test.unknown
+longtext: |
+  test
+  :::test.test.testd
+  :::testa
