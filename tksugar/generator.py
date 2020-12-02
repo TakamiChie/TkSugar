@@ -9,6 +9,7 @@ import yaml
 from yamlinclude import YamlIncludeConstructor
 
 from tksugar.tkmanager import TkManager
+from tksugar.localizer import Localizer
 from tksugar.widgets.generatorsupport import GeneratorSupport
 from tksugar.eventreciever import EventReciever
 
@@ -218,7 +219,7 @@ class Generator(object):
   The core object that creates the Tk window.
   Users of this module will use this core object to generate a Tk window.
   """
-  def __init__(self, file="",modules=["tksugar.widgets", "tkinter"]):
+  def __init__(self, file="",modules=["tksugar.widgets", "tkinter"], localization_file=""):
     """
     constructor.
 
@@ -236,6 +237,12 @@ class Generator(object):
 
       Because modules can be added with the `Generator#add_modules()`,
       the value is specified here only if you do not want to load the tkinter module.
+    localization_file: str
+      Path indicating a YAML-formatted dictionary file used for UI localization.
+      This dictionary contains only dict, list, and str.
+      If the format is wrong, no error is generated at this point, even if the path does not exist.
+
+      If omitted, the UI localizer is disabled.
     """
     self.string = ""
     if file:
@@ -244,6 +251,7 @@ class Generator(object):
       YamlIncludeConstructor.add_to_loader_class(loader_class=GeneratorLoader, base_dir=str(Path(file).parent))
     self._modules = modules
     self._widgets = []
+    self.localization_file = localization_file
     self.vars = None
 
   def add_modules(self, *modules):
@@ -299,6 +307,8 @@ class Generator(object):
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
     # Prepare
+    l = Localizer(self.localization_file)
+    l.localize(struct)
     modules = self._load_modules()
     tree = self._scantree(struct)
     # Load Root Object
