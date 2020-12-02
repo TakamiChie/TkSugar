@@ -67,6 +67,17 @@ class Test_Generator(unittest.TestCase):
     self.assertEquals(type(tk.children["!frame"]), tkinter.Frame)
     self.assertEquals(type(tk.children["!frame"].children["!button"]), tkinter.Button)
 
+  def test_localize(self):
+    """
+    When you call the `Generator#generate()` method with the following conditions
+    Verify that the translation is done.
+    * Specify one Tk window in the file.
+    * Specify existing translation dictionary files.
+    """
+    gen = Generator("tests/definition/generator_test/localize_target.yml", localization_file="tests/definition/generator_test/localize_script.yml")
+    gen.generate()
+    self.assertEquals(gen.findbyid("button").widget.cget("text"), "translated")
+
   def test_idtags(self):
     """
     Confirm that the target Tk window is created when the `Generator#generate()` method
@@ -144,6 +155,17 @@ class Test_Generator(unittest.TestCase):
     gen = Generator("tests/definition/generator_test/testdir/multiple_files.yml")
     tk = gen.generate()
     self.assertEquals(type(gen.findbyid("testbutton").widget), tkinter.Button)
+
+  def test_no_localize(self):
+    """
+    When you call the `Generator#generate()` method with the following conditions
+    Verify that no translation is done.
+    * Specify one Tk window in the file.
+    * Do not specify the translation dictionary file.
+    """
+    gen = Generator("tests/definition/generator_test/localize_target.yml")
+    gen.generate()
+    self.assertEquals(gen.findbyid("button").widget.cget("text"), "OK")
 
   def test_command_no_handler(self):
     """
