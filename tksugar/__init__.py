@@ -1,3 +1,3 @@
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 from tksugar.generator import Generator
 from tksugar.tkmanager import TkManager
