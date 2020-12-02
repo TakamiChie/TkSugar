@@ -10,7 +10,7 @@ pyyaml = "*"
 pyyaml-include = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
 
 [scripts]
 clear = "pwsh -c Remove-Item -Recurse -Force *.egg-info, build, dist"
