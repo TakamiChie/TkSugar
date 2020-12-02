@@ -1,3 +1,4 @@
+from pathlib import Path
 import re
 
 from yaml.loader import SafeLoader
@@ -21,8 +22,11 @@ class Localizer(object):
     file: str
       The path to the YAML file that contains the translation string.
     """
-    with open(file, "r") as f:
-      self.string = f.read()
+    self.string = ""
+    p = Path(file)
+    if p.exists():
+      with open(p, "r") as f:
+        self.string = f.read()
     self._translatedict = None
 
   def _prepare(self):
@@ -31,13 +35,14 @@ class Localizer(object):
     """
     def flatten_dict(basename, struct):
       result = {}
-      for k in struct.keys():
-        if type(struct[k]) is dict:
-          result.update(flatten_dict(f"{basename}{k}.", struct[k]))
-        elif type(struct[k]) is list:
-          raise ValueError("The list can not be included.")
-        else:
-          result[f"{basename}{k}"] = struct[k]
+      if type(struct) is dict:
+        for k in struct.keys():
+          if type(struct[k]) is dict:
+            result.update(flatten_dict(f"{basename}{k}.", struct[k]))
+          elif type(struct[k]) is list:
+            raise ValueError("The list can not be included.")
+          else:
+            result[f"{basename}{k}"] = struct[k]
       return result
     if self._translatedict is None:
       # Read
