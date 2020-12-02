@@ -3,13 +3,13 @@ import inspect
 from pathlib import Path
 import tkinter
 import re
-from tksugar.localizer import Localizer
 from typing import Type
 
 import yaml
 from yamlinclude import YamlIncludeConstructor
 
 from tksugar.tkmanager import TkManager
+from tksugar.localizer import Localizer
 from tksugar.widgets.generatorsupport import GeneratorSupport
 from tksugar.eventreciever import EventReciever
 
