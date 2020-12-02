@@ -24,7 +24,7 @@ class Localizer(object):
     """
     self.string = ""
     p = Path(file)
-    if p.exists():
+    if file and p.exists():
       with open(p, "r") as f:
         self.string = f.read()
     self._translatedict = None

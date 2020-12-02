@@ -69,6 +69,22 @@ class Test_Localizer(unittest.TestCase):
     self.assertEqual(l._translate("testb"), "testb")
     self.assertEqual(l._translate("test.testd"), "test.testd")
 
+  def test_localize_emptytext(self):
+    """
+    If you run `Localizer#localize()` under the following conditions,
+    Ensure that no exceptions are raised and all keywords in the specified data are not replaced.
+    * Specify blanks at the specified location in the YML file.
+    * A mixture of keywords in the dictionary and those not in the dictionary.
+    """
+    l = Localizer("")
+    with open("tests/definition/localizer_test/target.yml") as f:
+      data = yaml.safe_load(f)
+    l.localize(data)
+    self.assertEqual(data["targets"], "testa")
+    self.assertEqual(data["non_targets"], "no translate")
+    self.assertEqual(data["listitems"], ["test.testb", "test.testc", "test.unknown"])
+    self.assertEqual(data["longtext"], "test\ntest.test.testd\ntesta")
+
   def test_localize_nofile(self):
     """
     If you run `Localizer#localize()` under the following conditions,
