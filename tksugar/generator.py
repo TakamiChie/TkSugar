@@ -219,7 +219,7 @@ class Generator(object):
   The core object that creates the Tk window.
   Users of this module will use this core object to generate a Tk window.
   """
-  def __init__(self, file="",modules=["tksugar.widgets", "tkinter"], localization_file=""):
+  def __init__(self, file="",modules=["tksugar.widgets", "tkinter"], localization_file="", encoding="UTF-8"):
     """
     constructor.
 
@@ -243,15 +243,18 @@ class Generator(object):
       If the format is wrong, no error is generated at this point, even if the path does not exist.
 
       If omitted, the UI localizer is disabled.
+    encoding: str
+      File Encoding.
     """
     self.string = ""
     if file:
-      with open(file, "r") as f:
+      with open(file, "r", encoding=encoding) as f:
         self.string = f.read()
       YamlIncludeConstructor.add_to_loader_class(loader_class=GeneratorLoader, base_dir=str(Path(file).parent))
     self._modules = modules
     self._widgets = []
     self.localization_file = localization_file
+    self.localization_file_encoding = encoding
     self.vars = None
 
   def add_modules(self, *modules):
@@ -307,7 +310,7 @@ class Generator(object):
     if not type(struct) is dict or len(struct) > 1:
       raise ValueError("The root node must be a dict and single.")
     # Prepare
-    l = Localizer(self.localization_file)
+    l = Localizer(self.localization_file, self.localization_file_encoding)
     l.localize(struct)
     modules = self._load_modules()
     tree = self._scantree(struct)

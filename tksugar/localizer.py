@@ -13,7 +13,7 @@ class Localizer(object):
   Dictionary data can have a hierarchical structure.
   Data with a hierarchical structure is expanded into a character string delimited during translation processing.
   """
-  def __init__(self, file):
+  def __init__(self, file, encoding="UTF-8"):
     """
     Constructor.
 
@@ -21,11 +21,13 @@ class Localizer(object):
     ----
     file: str
       The path to the YAML file that contains the translation string.
+    encoding: str
+      File Encoding.
     """
     self.string = ""
     p = Path(file)
     if file and p.exists():
-      with open(p, "r") as f:
+      with open(p, "r", encoding=encoding) as f:
         self.string = f.read()
     self._translatedict = None
 

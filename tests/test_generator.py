@@ -140,6 +140,29 @@ class Test_Generator(unittest.TestCase):
     tk = gen.generate()
     self.assertEquals(gen.findbyid("test").widget.__class__.__module__, "tests.test_generator")
 
+  def test_load_utf8(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Contains Japanese characters.
+    * The encoding of the file is UTF-8.
+    """
+    gen = Generator("tests/definition/generator_test/japanese_utf8.yml")
+    gen.generate()
+    self.assertEquals(gen.findbyid("test").widget.cget("text"), "ボタン")
+
+  def test_load_sjis(self):
+    """
+    Confirm that the target Tk window is created when the `Generator#generate()` method
+    is called under the following conditions.
+    * Contains Japanese characters.
+    * The encoding of the file is Shift-JIS.
+    * Specify Shift-JIS as the encoding in the Generator argument.
+    """
+    gen = Generator("tests/definition/generator_test/japanese_sjis.yml", encoding="Shift_JIS")
+    gen.generate()
+    self.assertEquals(gen.findbyid("test").widget.cget("text"), "ボタン")
+
   #endregion
 
   #region Test of semi-normal operation
@@ -221,6 +244,16 @@ class Test_Generator(unittest.TestCase):
     gen = Generator("tests/definition/generator_test/command_unknown.yml")
     with self.assertRaises(NameError):
       gen.generate()
+
+  def test_load_sjis_noencode(self):
+    """
+    Confirm that UnicodeDecodeError occurs when calling the `Generator#generate()` method under the following conditions.
+    * Contains Japanese characters.
+    * The encoding of the file is Shift-JIS.
+    * Do not specify the encoding in the Generator argument.
+    """
+    with self.assertRaises(UnicodeDecodeError):
+      Generator("tests/definition/generator_test/japanese_sjis.yml")
 
   #endregion
 
