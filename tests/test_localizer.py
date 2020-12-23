@@ -53,6 +53,37 @@ class Test_Localizer(unittest.TestCase):
     self.assertEqual(data["listitems"], ["b", "c", "test.unknown"])
     self.assertEqual(data["longtext"], "test\nd\na")
 
+  def test_localize_utf8(self):
+    """
+    If you run `Localizer#localize()` under the following conditions,
+    Make sure that all keywords among the given data are replaced.
+    * YML file exists.
+    * A mixture of keywords in the dictionary and those not in the dictionary.
+    * YML file contains Japanese characters.
+    * The encoding of the file is UTF-8.
+    """
+    l = Localizer("tests/definition/localizer_test/japanese_utf8.yml")
+    with open("tests/definition/localizer_test/target.yml") as f:
+      data = yaml.safe_load(f)
+    l.localize(data)
+    self.assertEqual(data["targets"], "テストA")
+
+  def test_localize_sjis(self):
+    """
+    If you run `Localizer#localize()` under the following conditions,
+    Make sure that all keywords among the given data are replaced.
+    * YML file exists.
+    * A mixture of keywords in the dictionary and those not in the dictionary.
+    * YML file contains Japanese characters.
+    * The encoding of the file is Shift-JIS.
+    * Specify Shift-JIS as the encoding in the Generator argument.
+    """
+    l = Localizer("tests/definition/localizer_test/japanese_sjis.yml", encoding="Shift_JIS")
+    with open("tests/definition/localizer_test/target.yml") as f:
+      data = yaml.safe_load(f)
+    l.localize(data)
+    self.assertEqual(data["targets"], "テストA")
+
   #endregion
 
   #region Semi-normal behavior testing
@@ -115,6 +146,20 @@ class Test_Localizer(unittest.TestCase):
     with self.assertRaises(ValueError) as cm:
       l._prepare()
       self.assertEqual(str(cm.exception), "The list can not be included.")
+
+  def test_localize_sjis_noencode(self):
+    """
+    If you run `Localizer#localize()` under the following conditions,
+    Make sure that all keywords among the given data are replaced.
+    * YML file exists.
+    * A mixture of keywords in the dictionary and those not in the dictionary.
+    * YML file contains Japanese characters.
+    * The encoding of the file is Shift-JIS.
+    * The encoding of the file is Shift-JIS.
+    * Do not specify the encoding in the Generator argument.
+    """
+    with self.assertRaises(UnicodeDecodeError):
+      Localizer("tests/definition/localizer_test/japanese_sjis.yml")
 
   #endregion
 
