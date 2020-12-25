@@ -37,6 +37,17 @@ class Test_Localizer(unittest.TestCase):
     self.assertEqual(l._translate("testa"), "a")
     self.assertEqual(l._translate("test.testb"), "b")
 
+  def test_haslist(self):
+    """
+    If you run `Localizer#_translate()` under the following conditions,
+    Make sure that the items in the list are not stored.
+    * YML file exists.
+    * YML file contains list information.
+    """
+    l = Localizer("tests/definition/localizer_test/haslist.yml")
+    l._prepare()
+    self.assertEqual(l._translatedict["test.testc"], "")
+
   def test_localize(self):
     """
     If you run `Localizer#localize()` under the following conditions,
@@ -135,17 +146,6 @@ class Test_Localizer(unittest.TestCase):
   #endregion
 
   #region Anomaly Testing
-
-  def test_haslist(self):
-    """
-    Make sure ValueError is raised when `Localizer#_prepare()` is executed under the following conditions.
-    * YML file exists.
-    * YML file contains list information.
-    """
-    l = Localizer("tests/definition/localizer_test/haslist.yml")
-    with self.assertRaises(ValueError) as cm:
-      l._prepare()
-      self.assertEqual(str(cm.exception), "The list can not be included.")
 
   def test_localize_sjis_noencode(self):
     """
