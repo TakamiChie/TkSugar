@@ -1,0 +1,8 @@
+_Tk:
+  title: "TEST Window"
+  _Frame:
+    grid:
+    _Button:
+      text: "ƒ{ƒ^ƒ“"
+      anchor: "s"
+      ::id: test

@@ -1,0 +1,6 @@
+testa: テストA
+test:
+  testb: テストB
+  testc: テストC
+  test:
+    testd: テストD
