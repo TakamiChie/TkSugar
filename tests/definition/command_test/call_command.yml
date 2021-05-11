@@ -1,0 +1,8 @@
+_Tk:
+  title: Test Window
+  _Button:
+    text: Test Button
+    pack:
+      anchor: center
+      expand: 1
+    ::command:
