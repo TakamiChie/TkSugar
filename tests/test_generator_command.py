@@ -22,8 +22,17 @@ class Test_Generator_command(unittest.TestCase):
     """
     Mark the test item success.
     Marks are removed at the beginning of the next test.
+
+    In the test method, the value to be set can be changed by adding the value of `#success` before calling the `#passed()` method for the first time.
+    number:`#passed()` The value is added to each time the method calls.
+    array:`#passed()`True is added to the array each time the method is called.
     """
-    self.success = True
+    if type(self.success) is int:
+      self.success += 1;
+    elif type(self.success) is list:
+      self.success.append(True)
+    else:
+      self.success = True
 
   def do_test(self, file: str, test: Callable[[TkManager], None], command: Callable= None):
     """
