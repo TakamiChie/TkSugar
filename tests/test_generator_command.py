@@ -70,5 +70,21 @@ class Test_Generator_command(unittest.TestCase):
     self.do_test("tests/definition/command_test/call_command.yml", command=command, test=test)
     self.assertTrue(self.success, "Command was not executed.")
 
+  def test_button_multiple(self):
+    """
+    When the method is executed with the `command` parameter specified in `Generator#generator()` under the following conditions
+    Confirm that the handler specified in `command` is executed.
+    * Multiple buttons.
+    """
+    def test(man: TkManager):
+      for i in range(3):
+        pyautogui.press("tab")
+        pyautogui.press("space")
+    def command(obj, tag):
+      if (self.success + 1) == obj["text"]: self.passed()
+    self.success = 0;
+    self.do_test("tests/definition/command_test/call_command_multiple.yml", command=command, test=test)
+    self.assertEqual(self.success, 3, "Command was not executed.")
+
 if __name__ == "__main__":
   unittest.main()

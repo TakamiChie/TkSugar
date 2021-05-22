@@ -1,0 +1,18 @@
+_Tk:
+  title: Test Window
+  ::children:
+  -
+    _Button:
+      text: 1
+      pack:
+      ::command:
+  -
+    _Button:
+      text: 2
+      pack:
+      ::command:
+  -
+    _Button:
+      text: 3
+      pack:
+      ::command:
