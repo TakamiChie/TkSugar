@@ -1,0 +1,26 @@
+_Tk:
+  title: Menu
+  ::children:
+    - _Menu:
+        ::command:
+        ::id: Menu
+        ::children:
+          - _Menu:
+              tearoff: 0
+              /label: "1"
+              items:
+                - "1"
+          - _Menu:
+              tearoff: 0
+              /label: "2"
+              items:
+                - {label: "2", accelerator: "Ctrl+Z"}
+          - _Menu:
+              tearoff: 0
+              /label: "3"
+              items:
+                - label: "3"
+                  type: check
+                  variable: !!var:BooleanVar
+                    name: check1
+                    default: True

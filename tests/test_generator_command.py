@@ -156,5 +156,22 @@ class Test_Generator_command(unittest.TestCase):
       modules=["tkinter", "tests.test_generator_command"])
     self.assertTrue(self.success, "Command was not executed.")
 
+  def test_menu(self):
+    """
+    When the method is executed with the `command` parameter specified in `Generator#generator()` under the following conditions
+    Confirm that the handler specified in `command` is executed.
+    * Menu
+    """
+    def test(man: TkManager):
+      for i in range(3):
+        pyautogui.press(["alt", f"{i + 1}"])
+        pyautogui.press("enter")
+    def command(obj, tag):
+      if f"{(self.success + 1)}" == tag.tag["item"]: self.passed()
+    self.success = 0
+    self.do_test("tests/definition/command_test/call_menu.yml", command=command,
+      test=test)
+    self.assertEqual(self.success, 3, "Command was not executed.")
+
 if __name__ == "__main__":
   unittest.main()
