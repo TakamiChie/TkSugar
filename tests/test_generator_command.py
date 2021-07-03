@@ -6,6 +6,51 @@ import pyautogui
 
 from tksugar import Generator, TkManager
 
+class TestFrame(tkinter.Frame):
+
+  class CommandButton(object):
+    def __init__(self, owner):
+      self.owner = owner
+
+    def __call__(self):
+      self.owner._buttonpressed()
+
+  def __init__(self, master=None, cnf={}, **kw):
+    """
+    constructor
+
+    STANDARD OPTIONS
+
+    textvariable
+    """
+    tkinter.Frame.__init__(self, master, cnf)
+    self._command = None
+    self.grid()
+    self.textbox = tkinter.Entry(self, kw)
+    self.textbox.grid(row=0, column=0, sticky="ew", padx=4, ipadx=2, ipady=2)
+    self.button = tkinter.Button(self, text="Test", command=self.CommandButton(self))
+    self.button.grid(row=0, column=1, ipadx=2, ipady=2)
+
+  def _buttonpressed(self):
+    """
+    Event handler that will be called when the button is clicked.
+    """
+    self.command()
+
+  @property
+  def command(self):
+    """
+    Gets or sets an event handler that will be executed when the button is pressed.
+    """
+    return self._command
+
+  @command.setter
+  def command(self, value):
+    """
+    Gets or sets an event handler that will be executed when the button is pressed.
+    """
+    self._command = value
+
 class Test_Generator_command(unittest.TestCase):
   """
   Testing the `command` parameter of the`Generator#generate()` method.
@@ -90,6 +135,26 @@ class Test_Generator_command(unittest.TestCase):
     self.success = 0;
     self.do_test("tests/definition/command_test/call_command_multiple.yml", command=command, test=test)
     self.assertEqual(self.success, 3, "Command was not executed.")
+
+  def test_customwidget(self):
+    """
+    When the method is executed with the `command` parameter specified in `Generator#generator()` under the following conditions
+    Confirm that the handler specified in `command` is executed.
+    * CustomWidget
+    """
+    def test(man: TkManager):
+      pyautogui.press("tab")
+      for i in range(5):
+        pyautogui.press(f"{i}")
+      pyautogui.press("tab")
+      pyautogui.press("space")
+    def command(obj, tag):
+      if obj.textbox.get() == "01234":
+        self.passed()
+    self.do_test("tests/definition/command_test/call_customwidget.yml", command=command,
+      test=test,
+      modules=["tkinter", "tests.test_generator_command"])
+    self.assertTrue(self.success, "Command was not executed.")
 
 if __name__ == "__main__":
   unittest.main()

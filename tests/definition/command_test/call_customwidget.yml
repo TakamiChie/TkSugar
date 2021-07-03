@@ -1,0 +1,7 @@
+_Tk:
+  title: Custom Widget
+  _Frame:
+    pack: { padx: 4, pady: 4, fill: both, expand: 1}
+    _TestFrame:
+      grid: {row: 0, column: 1, sticky: ew}
+      ::command:
