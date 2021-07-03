@@ -58,6 +58,7 @@ class Test_Generator_command(unittest.TestCase):
 
   def setUp(self) -> None:
     self.success = False
+    self.exceptions = None
     return super().setUp()
 
   def tearDown(self):
@@ -99,13 +100,18 @@ class Test_Generator_command(unittest.TestCase):
     """
     def _do():
       if test is not None:
-        test(man)
+        try:
+          test(man)
+        except Exception as e:
+          self.exceptions = e
       man.window.after(500, lambda : man.window.destroy())
     man = Generator(file=file,
       modules=["tksugar.widgets", "tkinter"] if modules == [] else modules) \
       .get_manager(commandhandler=command)
     man.window.after(100, _do)
     man.mainloop()
+    if self.exceptions is not None:
+      raise self.exceptions
 
   def test_button(self):
     """
