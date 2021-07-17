@@ -113,6 +113,7 @@ class Test_Generator_command(unittest.TestCase):
     man.mainloop()
     if self.exceptions is not None:
       raise self.exceptions
+    return man
 
   def test_button(self):
     """
