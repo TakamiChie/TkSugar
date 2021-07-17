@@ -1,0 +1,5 @@
+text: "Command"
+::command:
+pack:
+  anchor: center
+  expand: 1
