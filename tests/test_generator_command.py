@@ -157,12 +157,12 @@ class Test_Generator_command(unittest.TestCase):
       pyautogui.press("tab")
       pyautogui.press("space")
     def command(obj, tag):
-      if obj.textbox.get() == "01234":
-        self.passed()
-    self.do_test("tests/definition/command_test/call_customwidget.yml", command=command,
+      self.passed()
+    man = self.do_test("tests/definition/command_test/call_customwidget.yml", command=command,
       test=test,
       modules=["tkinter", "tests.test_generator_command"])
     self.assertTrue(self.success, "Command was not executed.")
+    self.assertEqual(man.vars["test"].get(), "01234", "An input value reflection test.")
 
   def test_menu(self):
     """

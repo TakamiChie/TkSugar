@@ -4,4 +4,6 @@ _Tk:
     pack: { padx: 4, pady: 4, fill: both, expand: 1}
     _TestFrame:
       grid: {row: 0, column: 1, sticky: ew}
+      textvariable: !!var:StringVar
+        name: test
       ::command:
