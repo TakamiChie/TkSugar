@@ -100,6 +100,7 @@ class Test_Generator_command(unittest.TestCase):
     """
     def _do():
       if test is not None:
+        man.window.focus_force()
         try:
           test(man)
         except Exception as e:
