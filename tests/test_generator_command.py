@@ -195,5 +195,20 @@ class Test_Generator_command(unittest.TestCase):
     self.do_test("tests/definition/command_test/call_multifile_main.yml", command=command, test=test)
     self.assertTrue(self.success, "Command was not executed.")
 
+  def test_notebook(self):
+    """
+    When the method is executed with the `command` parameter specified in `Generator#generator()` under the following conditions
+    Confirm that the handler specified in `command` is executed.
+    * Use multiple YAML files for GUI definitions.
+    """
+    def test(man: TkManager):
+      pyautogui.press("tab")
+      pyautogui.press("tab")
+      pyautogui.press("space")
+    def command(obj, tag):
+      self.passed()
+    self.do_test("tests/definition/command_test/call_notebook.yml", command=command, test=test)
+    self.assertTrue(self.success, "Command was not executed.")
+
 if __name__ == "__main__":
   unittest.main()
