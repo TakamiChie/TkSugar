@@ -199,7 +199,7 @@ class Test_Generator_command(unittest.TestCase):
     """
     When the method is executed with the `command` parameter specified in `Generator#generator()` under the following conditions
     Confirm that the handler specified in `command` is executed.
-    * Use multiple YAML files for GUI definitions.
+    * Using Notebook
     """
     def test(man: TkManager):
       pyautogui.press("tab")
