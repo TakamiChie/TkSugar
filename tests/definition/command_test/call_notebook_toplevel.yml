@@ -1,0 +1,12 @@
+_Toplevel:
+  title: "Notebook TEST"
+  geometry: 300x400
+  _Notebook:
+    pack: {expand: True, fill: both}
+    ::children:
+      - _Frame:
+          /text: Tab 1
+          _Button:
+            text: Button
+            pack: { anchor: center, expand: 1}
+            ::command:

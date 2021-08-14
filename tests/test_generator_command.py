@@ -105,7 +105,7 @@ class Test_Generator_command(unittest.TestCase):
           test(man)
         except Exception as e:
           self.exceptions = e
-      man.window.after(500, lambda : man.window.destroy())
+        man.window.after(500, lambda : man.window.destroy())
     man = Generator(file=file,
       modules=["tksugar.widgets", "tkinter"] if modules == [] else modules) \
       .get_manager(commandhandler=command)
@@ -209,6 +209,25 @@ class Test_Generator_command(unittest.TestCase):
       self.passed()
     self.do_test("tests/definition/command_test/call_notebook.yml", command=command, test=test)
     self.assertTrue(self.success, "Command was not executed.")
+
+  def test_notebook_not_root(self):
+    """
+    When the method is executed with the `command` parameter specified in `Generator#generator()` under the following conditions
+    Confirm that the handler specified in `command` is executed.
+    * Using Notebook
+    * The window that owns the Notebook is not the DefaultRoot.
+    """
+    def test(man: TkManager):
+      pyautogui.press("tab")
+      pyautogui.press("space")
+    def command(obj, tag):
+      try:
+        Generator("tests/definition/command_test/call_notebook_toplevel.yml").get_manager()
+        self.passed()
+      except Exception as e:
+        self.exceptions = e
+    self.do_test("tests/definition/command_test/call_command.yml", command=command, test=test)
+    self.assertTrue(self.success, "An error has occured.")
 
 if __name__ == "__main__":
   unittest.main()
